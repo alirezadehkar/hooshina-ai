@@ -1,5 +1,5 @@
 <?php
-namespace Hooshina\App\Generator;
+namespace HooshinaAi\App\Generator;
 
 interface GeneratorInterface
 {

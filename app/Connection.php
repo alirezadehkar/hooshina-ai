@@ -1,9 +1,10 @@
 <?php
-namespace Hooshina\App;
+namespace HooshinaAi\App;
 
-use Hooshina\App\AdminMenu;
-use Hooshina\App\Options;
-use Hooshina\App\Traits\Singleton;
+use HooshinaAi\App\AdminMenu;
+use HooshinaAi\App\Generator\GeneratorHelper;
+use HooshinaAi\App\Options;
+use HooshinaAi\App\Traits\Singleton;
 
 class Connection
 {
@@ -13,6 +14,8 @@ class Connection
     private static $baseUrl = 'https://app.hooshina.com/';
 
     private static $connectionOptionKey = 'hooshina_connection_token';
+    
+    const CHARGE_PAGE_URL = 'https://app.hooshina.com/panel/credits';
 
     public function __construct()
     {
@@ -27,7 +30,7 @@ class Connection
 
     public static function getApiBaseUrl()
     {
-        return self::$baseUrl . 'api/';
+        return self::$baseUrl . 'api/v1/';
     }
 
     private static function getAppUuid()
@@ -35,44 +38,10 @@ class Connection
         return get_option('hooshina_app_user_uuid');
     }
 
-    private static function updateAppUuid($uuid)
-    {
-        $currentUuid = self::getAppUuid();
-
-        if ($currentUuid == $uuid)
-            return false;
-
-        return update_option('hooshina_app_user_uuid', $uuid);
-    }
-
     private static function generateApplicationPassword()
     {
-        if(!class_exists('WP_Application_Passwords'))
-            return false;
-
-        $userId = get_current_user_id();
-        $appExists = \WP_Application_Passwords::application_name_exists_for_user($userId, self::$appName);
-
-        if ($appExists){
-            $data = \WP_Application_Passwords::get_user_application_password($userId, self::getAppUuid());
-            if(is_array($data) && isset($data['password'])){
-                return $data['password'];
-            }
-            return false;
-        }
-
-        $data = \WP_Application_Passwords::create_new_application_password($userId, array('name' => self::$appName));
-
-        if (is_wp_error($data))
-            return false;
-
-        if (isset($data[1]) && isset($data[1]['uuid']))
-            $uuid = self::updateAppUuid($data[1]['uuid']);
-
-        if (isset($data[0]))
-            return $data[0]; // password
-
-        return false;
+        $host = wp_parse_url(site_url(), PHP_URL_HOST);
+        return md5($host);
     }
 
     public static function getConnectUrl()
@@ -83,7 +52,7 @@ class Connection
 
         $data = [
             'auth_token' => $appPass,
-            'from' => admin_url('admin.php?page=hooshina')
+            'from' => AdminMenu::get_options_url('account')
         ];
 
         return add_query_arg('data', base64_encode(wp_json_encode($data)), (self::getBaseUrl() . 'connect/app'));
@@ -97,17 +66,18 @@ class Connection
             'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Referer' => site_url()
         ];
 
         $response = wp_remote_get($url, [
             'headers' => $headers,
-            'timeout' => 90,
+            'timeout' => 120,
         ]);
 
         if (is_wp_error($response)) {
             return false;
         }
+
+        return wp_remote_retrieve_body($response);
 
         $status_code = wp_remote_retrieve_response_code($response);
 
@@ -129,6 +99,7 @@ class Connection
 
         if ($revoke){
             delete_option(self::$connectionOptionKey);
+            GeneratorHelper::delete_cache();
         }
 
         return $revoke;
@@ -157,8 +128,8 @@ class Connection
     private static function getCurrentPageUrl()
     {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
-        $host = isset($_SERVER['HTTP_HOST']) ? Helper::unslash_sanitize($_SERVER['HTTP_HOST']) : null;
-        $uri = isset($_SERVER['REQUEST_URI']) ? Helper::unslash_sanitize($_SERVER['REQUEST_URI']) : null;
+        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : null;
+        $uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : null;
         return $protocol . $host . $uri;
     }
 
@@ -185,7 +156,6 @@ class Connection
             'Authorization' => 'Bearer ' . $auth,
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Referer' => site_url()
         ];
 
         $response = wp_remote_get($url, [
@@ -209,8 +179,10 @@ class Connection
     public static function handle_return_from_ai()
     {
         $currentUrl = self::getCurrentPageUrl();
-        $mainToken = isset($_GET['token']) ? sanitize_text_field($_GET['token']) : null;
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $mainToken = isset($_GET['token']) ? sanitize_text_field(wp_unslash($_GET['token'])) : null;
+        
         if (empty($mainToken))
             return false;
 
@@ -221,6 +193,7 @@ class Connection
         }
 
         $verify = self::verifyConnection($tokenData->auth);
+
         if (!$verify){
             delete_option(self::$connectionOptionKey);
             return false;
@@ -229,6 +202,7 @@ class Connection
         update_option(self::$connectionOptionKey, base64_decode($mainToken));
 
         wp_redirect(remove_query_arg('token', $currentUrl));
+        exit();
     }
 
     public static function handle_event_check_connection_status()

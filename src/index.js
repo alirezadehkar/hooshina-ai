@@ -1,3 +1,4 @@
+
 import {ButtonsInitialize} from "./app/_components/Buttons"
 import {ConnectingButton} from "./app/_components/Connection";
 
@@ -7,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     wp.element.render(<ButtonsInitialize />, appContainer);
 
     const addConnectingButtonToForm = () => {
-        const formElement = document.querySelector('.hai-options form');
+        const formElement = document.querySelector('.hai-options .connection-button-wrap');
         if (formElement) {
             const buttonContainer = document.createElement('div');
             buttonContainer.setAttribute('id', 'connecting-button-container');

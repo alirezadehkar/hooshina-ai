@@ -1,5 +1,5 @@
 <?php
-namespace Hooshina\App;
+namespace HooshinaAi\App;
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -21,23 +21,31 @@ class AdminMenu
             self::MENU_PARENT_SLUG,
             [__CLASS__, 'handle_menu_content'],
             'dashicons-smiley',
-            2
+            99
         );
 
-        add_action('load-' . AdminMenu::$parent_menu, ['\Hooshina\App\Connection', 'handle_return_from_ai']);
+        add_action('load-' . AdminMenu::$parent_menu, ['\HooshinaAi\App\Connection', 'handle_return_from_ai']);
+        add_action('load-' . AdminMenu::$parent_menu, ['\HooshinaAi\App\Settings', 'handle_save_settings']);
     }
 
     public static function handle_menu_content(){
-        $page = isset($_GET['page']) ? str_replace('hai-', '', Helper::unslash_sanitize($_GET['page'])) : null;
-        if(empty($page) || $page === self::MENU_PARENT_SLUG){
-            $page = 'options';
-        }
-        do_action("hai_admin_page_{$page}");
-        hai_view('admin.pages.' . $page, ['page' => $page]);
+        hooshina_ai_view('admin.pages.options');
     }
 
-    public static function get_options_url()
+    public static function get_options_url($tab = null)
     {
-        return admin_url('admin.php?page=' . self::MENU_PARENT_SLUG);
+        return add_query_arg('tab', $tab, admin_url('admin.php?page=' . self::MENU_PARENT_SLUG));
+    }
+
+    public static function handle_activation_redirect()
+    {
+        $key = 'hooshina_ai_plugin_activated';
+
+        if (Options::get_option($key, false)) {
+            Options::delete_option($key);
+
+            wp_redirect(AdminMenu::get_options_url('account'));
+            exit;
+        }
     }
 }

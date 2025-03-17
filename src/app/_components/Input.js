@@ -18,7 +18,7 @@ const Input = forwardRef(function CustomInput(props, ref) {
 });
 
 export default function InputMultiline(props) {
-    return <Input multiline {...props} placeholder="Type something…" />;
+    return <Input multiline {...props} placeholder={ hai_data.texts.subject_input_placeholder } />;
 }
 
 const RootDiv = styled('div')`

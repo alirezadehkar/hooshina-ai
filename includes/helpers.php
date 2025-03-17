@@ -1,31 +1,31 @@
 <?php
 defined('ABSPATH') or die('No script kiddies please!');
 
-function get_hai_version()
+function hooshina_ai_get_version()
 {
     if(!function_exists('get_plugin_data')){
         require_once(ABSPATH . 'wp-admin/includes/plugin.php');
     }
-    $plugin_data = get_plugin_data(HAI_PLUGIN_FILE_PATH);
+    $plugin_data = get_plugin_data(HOOSHINA_AI_PLUGIN_FILE_PATH);
     return $plugin_data['Version'];
 }
 
-function hai_view($name, $data = [])
+function hooshina_ai_view($name, $data = [])
 {
     if(is_array($data) && !empty($data)){
         extract($data);
     }
 
-    $path = HAI_VIEW_PATH . str_replace('.', '/', $name) . '.php';
+    $path = HOOSHINA_AI_VIEW_PATH . str_replace('.', '/', $name) . '.php';
 
     if (!file_exists($path)) return false;
 
     include $path;
 }
 
-function get_hai_asset_data($key = null)
+function hooshina_ai_get_asset_data($key = null)
 {
-    $path = HAI_PATH . 'build/index.asset.php';
+    $path = HOOSHINA_AI_PATH . 'build/index.asset.php';
     if (!file_exists($path))
         return false;
 

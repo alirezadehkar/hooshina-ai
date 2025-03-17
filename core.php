@@ -6,9 +6,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use Hooshina\App\Assets;
+use HooshinaAi\App\AdminMenu;
+use HooshinaAi\App\Assets;
+use HooshinaAi\App\Options;
 
-final class HooshinaAi_Plugin {
+final class Hooshina_Ai_Plugin {
     private static $instance = null;
 
     public static function Instance(){
@@ -25,7 +27,9 @@ final class HooshinaAi_Plugin {
         $this->load_notices();
         $this->register_activation();
         add_action('plugins_loaded', [$this, 'include_files']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_front_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('elementor/editor/before_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 
     /**
@@ -35,24 +39,29 @@ final class HooshinaAi_Plugin {
      */
     public function include_files()
     {
-        require_once HAI_INC_PATH . 'helpers.php';
+        require_once HOOSHINA_AI_PATH . 'vendor/autoload.php';
+
+        require_once HOOSHINA_AI_INC_PATH . 'helpers.php';
 
         $this->register_autoload();
 
-        \Hooshina\App\Hooks::init();
+        \HooshinaAi\App\Hooks::init();
     }
 
-    /**
-     * Enqueue admin scripts
-     *
-     * @return void
-     */
+    public function enqueue_front_assets()
+    {
+        Assets::enqueue_style('hooshina-ai-style', Assets::get_css('style'));
+
+        Assets::enqueue_script('hooshina-ai-script', HOOSHINA_AI_JS_URL . 'script.js', [], null, true);
+        Assets::localize_script('hooshina-ai-script', 'hai_data', Assets::get_localize_data());
+    }
+    
     public function enqueue_admin_assets()
     {
-        Assets::enqueue_style('hai-style', Assets::get_css('style'));
+        Assets::enqueue_style('hooshina-ai-admin', Assets::get_css('admin'));
 
-        Assets::enqueue_script('hai-script', HAI_BUILD_URL . 'index.js', ['wp-element', 'wp-components', 'wp-i18n', 'wp-hooks'], get_hai_asset_data('version'), true);
-        Assets::localize_script('hai-script', 'hai_data', Assets::get_localize_data());
+        Assets::enqueue_script('hooshina-ai-script', HOOSHINA_AI_BUILD_URL . 'index.js', ['wp-element', 'wp-components', 'wp-i18n', 'wp-hooks', 'wp-blocks', 'wp-rich-text', 'wp-editor'], hooshina_ai_get_asset_data('version'), true);
+        Assets::localize_script('hooshina-ai-script', 'hai_data', Assets::get_localize_data());
     }
 
     public function register_autoload()
@@ -66,8 +75,10 @@ final class HooshinaAi_Plugin {
 
     public function register_activation()
     {
-        register_activation_hook(HAI_PLUGIN_BASENAME, function (){
+        register_activation_hook(HOOSHINA_AI_PLUGIN_BASENAME, function (){
             $this->register_autoload();
+
+            Options::add_option('hooshina_ai_plugin_activated', true);
         });
     }
 
@@ -79,12 +90,12 @@ final class HooshinaAi_Plugin {
      */
     public function autoloader($class)
     {
-        if(strpos($class, 'Hooshina') !== false){
-            $class = str_replace(['Hooshina\\', 'Hooshina', '\\'], ['', '', '/'], $class);
+        if(strpos($class, 'HooshinaAi') !== false){
+            $class = str_replace(['HooshinaAi\\', 'HooshinaAi', '\\'], ['', '', '/'], $class);
             $class_arr = explode('/', $class);
             $file_name = $class_arr[array_key_last($class_arr)] . '.php';
             unset($class_arr[array_key_last($class_arr)]);
-            $file_path = HAI_PATH . strtolower(implode('/', $class_arr)) . '/' . $file_name;
+            $file_path = HOOSHINA_AI_PATH . strtolower(implode('/', $class_arr)) . '/' . $file_name;
 
             if(file_exists($file_path) && is_readable($file_path)){
                 include_once($file_path);
@@ -104,7 +115,7 @@ final class HooshinaAi_Plugin {
         if (file_exists($wp_core_lang)) {
             load_textdomain('hooshina-ai', $wp_core_lang);
         }
-        load_plugin_textdomain('hooshina-ai', false, HAI_BASENAME . '/languages/');
+        load_plugin_textdomain('hooshina-ai', false, HOOSHINA_AI_BASENAME . '/languages/');
     }
 
     private function load_notices(){

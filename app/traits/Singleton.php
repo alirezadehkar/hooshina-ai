@@ -1,5 +1,5 @@
 <?php
-namespace Hooshina\App\Traits;
+namespace HooshinaAi\App\Traits;
 
 trait Singleton
 {

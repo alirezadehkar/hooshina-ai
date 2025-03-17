@@ -1,28 +1,39 @@
 import {createTheme} from "@mui/material";
 
-const { createElement, useState, useEffect, useRef, createPortal } = window.wp.element;
+const { useState, useEffect, useRef } = window.wp.element;
 
 export function useMutationObserver(selector) {
     const [elements, setElements] = useState([]);
+    const initialized = useRef(false);
 
     useEffect(() => {
         const updateElements = () => {
-            const selectedElements = document.querySelectorAll(selector);
-            setElements(Array.from(selectedElements));
+            const selectedElements = Array.from(document.querySelectorAll(selector));
+            const newElementsData = selectedElements.map(el => el.id || el.className || el.tagName);
+            
+            const currentElementsData = elements.map(el => el.id || el.className || el.tagName);
+            
+            if (JSON.stringify(newElementsData) !== JSON.stringify(currentElementsData)) {
+                setElements(selectedElements);
+            }
         };
 
         const observer = new MutationObserver(updateElements);
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
+        observer.observe(document.body, { childList: true, subtree: true });
 
-        updateElements();
+        if (!initialized.current) {
+            updateElements();
+            initialized.current = true;
+        }
 
         return () => observer.disconnect();
-    }, [selector]);
+    }, [selector, elements]);
 
     return elements;
+}
+
+export function stripHtml(html) {
+    return html.replace(/<[^>]*>?/gm, '');
 }
 
 export function AutoClicker(url, target = '_self'){
@@ -65,4 +76,48 @@ export const CustomTheme = createTheme({
             color: '#fff'
         },
     },
+    components: {
+        MuiPopover: {
+            styleOverrides: {
+                root: {
+                    zIndex: 130000,
+                }
+            }
+        },
+        MuiSnackbar: {
+            styleOverrides: {
+                root: {
+                    zIndex: 131000,
+                }
+            }
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    fontFamily: 'inherit',
+                },
+            }
+        }
+    }
 });
+
+export const HooshinaIcon = () => (<span className="hooshina-icon hai-icon-logo" />);
+
+export const buttonActionTypes = {
+    blockPostTitle: 'block-post-title',
+    editorPostTitle: 'editor-post-title',
+    postSeoTitle: 'post-seo-title',
+    postSeoDescription: 'post-seo-description',
+    postSeoKeyword: 'post-seo-keyword',
+    productDescription: 'product-description',
+    blockPostThumbnail: 'block-post-thumbnail',
+    editorPostThumbnail: 'editor-post-thumbnail',
+    editorProductGallery: 'editor-product-gallery',
+    postExcerpt: 'post-excerpt',
+    commentReply: 'comment-reply',
+    productReviewReply: 'product-review-reply',
+    elementorTextField: 'elementor-text-field',
+    elementorTextareaField: 'elementor-textarea-field',
+    mediasPage: 'medias-page',
+    productReviewsSummary: 'product-reviews-summary'
+}

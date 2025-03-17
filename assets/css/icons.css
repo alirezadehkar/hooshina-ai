@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'hooshina-icon';
+    src: url('../fonts/fontello.svg?83618113');
+    src: url('../fonts/fontello.woff2?83618113') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="hai-icon-"]:before, [class*=" hai-icon-"]:before {
+    font-family: "hooshina-icon";
+    font-style: normal;
+    font-weight: normal;
+    speak: never;
+  
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+  
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+  
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+  
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+  
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+  
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+  }
+  
+.hai-icon-like:before { content: '\e800'; } 
+.hai-icon-dislike:before { content: '\e801'; } 
+.hai-icon-like2:before { content: '\e804'; } 
+.hai-icon-logo:before { content: '\e806'; }
+  

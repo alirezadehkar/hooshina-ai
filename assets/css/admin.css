@@ -1,0 +1,296 @@
+@import "./icons.css";
+
+:root {
+    --hai-primary-color: #04b4cc;
+    --hai-primary-color-200: #04b4cc33;
+    --hai-primary-color-800: #00454e;
+}
+
+.hai-button-portal .hai-button-wrap button {
+    background-color: var(--hai-primary-color);
+    color: #fff;
+    border: none;
+}
+
+.elementor-control-field .hai-button-wrap a {
+    padding: 8px 10px;
+    background-color: var(--hai-primary-color);
+    color: #fff;
+    margin: 7px 2px;
+    text-align: center;
+}
+
+.hooshina-ai-icon {
+    background: transparent url("../images/logo-icon.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.has-illustration .wp-hooshina-generator-button {
+    opacity: 0;
+}
+
+.comment .hai-button-wrap {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+.wp-media-buttons .hai-button-wrap {
+    display: inline-block;
+}
+
+.hai-button-wrap .MuiButton-root {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    color: #fff;
+    background-color: var(--hai-primary-color);
+    padding: 4px 10px;
+    border-radius: 7px;
+    text-decoration: none;
+    height: 40px;
+}
+
+.MuiBox-root .MuiFormControlLabel-root {
+    margin-left: 0; 
+    margin-right: 0;
+}
+
+html[dir="rtl"] .MuiButton-startIcon {
+    margin: 0 0 0 7px;
+}
+
+.hai-post-thumb-wrap {
+    padding: 10px;
+}
+
+.hai-post-thumb-wrap :is(a, button) {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    box-sizing: border-box;
+}
+
+.hai-button-portal {
+    display: inline-block;
+    padding: 5px 0;
+}
+
+#wp-media-grid .hai-button-portal {
+    vertical-align: middle;
+    margin: -7px 9px 0 5px;
+}
+
+.edit-post-visual-editor__post-title-wrapper .hai-button-portal {
+    position: absolute;
+    top: 0;
+    max-width: 840px;
+    margin: 0 auto 0 auto;
+    left: 24%;
+}
+
+html[dir=rtl] .edit-post-visual-editor__post-title-wrapper .hai-button-portal {
+    left: auto;
+    right: 24%;
+}
+
+.rank-math-editor-general .field-group .hai-button-portal {
+    margin: 8px 0;
+}
+
+.hai-icon-logo {
+    display: inline-block;
+    height: 31px;
+    vertical-align: middle;
+}
+
+.hai-large-button-wrap .hai-icon-logo {
+    height: 38px;
+}
+
+.block-editor-inserter .hai-button-portal {
+    margin: 0 8px;
+}
+
+#toplevel_page_hooshina .dashicons-before::before {
+    content: "\e806";
+    font-family: "hooshina-icon";
+    font-size: 22px;
+}
+
+.woocommerce_options_panel .form-field .hai-button-portal {
+    margin: 0 10px;
+}
+
+.hai-admin-wrap, 
+.hai-admin-wrap * {
+    box-sizing: border-box;
+}
+
+.hai-admin-wrap {
+    display: flex;
+    gap: 20px;
+}
+
+.hai-admin-section {
+    background-color: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.hai-admin-section.hai-admin-sidebar {
+    padding: 20px;
+    width: 20%;
+}
+
+.hai-admin-section.hai-admin-options-wrap {
+    width: 80%;
+}
+
+.hai-option-field-wrap {
+    padding: 25px;
+}
+
+.hai-admin-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.hai-admin-head svg {
+    width: 60px;
+    height: 60px;
+}
+
+.hai-admin-tabs ul {
+    margin: 0;
+}
+
+.hai-admin-tabs {
+    margin-top: 25px;
+}
+
+.hai-admin-tabs li a {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 17px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #595959;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.hai-admin-tabs li a:hover,
+.hai-admin-tabs li.active a {
+    background-color: var(--hai-primary-color);
+    color: #fff;
+}
+
+.hai-admin-tabs li {
+    position: relative;
+}
+
+.hai-admin-tabs li.active::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 60%;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 14px;
+    left: 10px;
+}
+
+
+.hai-ltr .hai-admin-tabs li.active::after {
+    left: auto;
+    right: 10px;
+}
+
+.hai-form-fields-group .hai-option-field-wrap:nth-of-type(2n-1) {
+    background-color: #F9F9F9;
+}
+
+.hai-option-field-wrap label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    display: inline-block;
+    width: 100%;
+}
+
+.hai-form-field select {
+    width: 20%;
+    padding: 6px 17px;
+    border-radius: 10px;
+    border: none;
+}
+
+.hai-options-foot {
+    padding: 25px;
+    margin-top: 15px;
+}
+
+.hai-options-foot .hai-submit {
+    background-color: var(--hai-primary-color);
+    border: none;
+    font-size: 17px;
+    padding: 9px 28px;
+    color: #fff;
+    border-radius: 10px;
+    transition: ease .15s;
+    cursor: pointer;
+}
+
+.hai-options-foot .hai-submit:hover {
+    box-shadow: 0 5px 15px #04b4cc85;
+}
+
+.hai-account-balance span {
+    font-size: 16px;
+    background-color: #bef7ff;
+    padding: 7px 15px;
+    display: inline-block;
+    border-radius: 7px;
+}
+
+.hai-account-balance a {
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+.hai-connection-notice {
+    padding: 17px;
+    background-color: var(--hai-primary-color);
+    color: #fff;
+}
+
+.hai-connection-notice p {
+    font-size: 16px;
+}
+
+.hai-connection-notice p a {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #fff;
+    padding: 5px 13px;
+    border-radius: 7px;
+    font-size: 15px;
+    color: var(--hai-primary-color-800);
+    margin: 0 7px;
+}
+
+button.MuiButton-root.Mui-disabled {
+    color: #000;
+    background-color: #7c7c7c;
+    opacity: 0.3;
+    filter: grayscale(1);
+    pointer-events: none;
+    user-select: none;
+}

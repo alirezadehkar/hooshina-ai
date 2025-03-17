@@ -1,7 +1,7 @@
 <?php
-namespace Hooshina\App;
+namespace HooshinaAi\App;
 
-use Hooshina\App\Connection;
+use HooshinaAi\App\Connection;
 
 class AiService
 {

@@ -1,0 +1,55 @@
+.hooshina-ai-product-summary {
+    margin: 15px 0;
+}
+
+.hooshina-ai.hooshina-ai-product-summary {
+    line-height: 27px;
+}
+
+.hooshina-ai-summary-head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.hooshina-ai-product-summary .hai-sicon {
+    height: 40px;
+}
+
+.hooshina-ai-product-summary .hai-sicon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.hooshina-ai-summary-head h5 {
+    font-size: 16px;
+    color: #242424;
+}
+
+.hooshina-ai-summary-head p {
+    font-size: 15px;
+    color: #7e7e7e;
+}
+
+.hooshina-ai-summary-content-wrap {
+    padding: 20px;
+    background-color: #e8fcff;
+    border-radius: 17px 0 17px 17px;
+}
+
+.rtl .hooshina-ai-summary-content-wrp {
+    border-radius: 0 17px 17px 17px;
+}
+
+.hooshina-ai-summary-content {
+    font-size: 15px;
+    color: #0e0e0e;
+}
+
+.hooshina-ai-summary-content-foot {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #9d9d9d;
+}
+
