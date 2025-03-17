@@ -254,12 +254,12 @@ const DataDisplay = ({
         }
     }
 
-    const generatorTypes = Object.entries(hai_data.generator.types);
-    const contentTones = Object.entries(hai_data.generator.contentTones);
-    const imageStyles = Object.entries(hai_data.generator.imageStyles);
-    const productImageStyles = Object.entries(hai_data.generator.productImageStyles);
-    const imageSizes = Object.entries(hai_data.generator.imageSizes);
-    const languages = Object.entries(hai_data.generator.languages);
+    const generatorTypes = hai_data.generator.types ? Object.entries(hai_data.generator.types) : {};
+    const contentTones = hai_data.generator.contentTones ? Object.entries(hai_data.generator.contentTones) : {};
+    const imageStyles = hai_data.generator.imageStyles ? Object.entries(hai_data.generator.imageStyles) : {};
+    const productImageStyles = hai_data.generator.productImageStyles ? Object.entries(hai_data.generator.productImageStyles) : {};
+    const imageSizes = hai_data.generator.imageSizes ? Object.entries(hai_data.generator.imageSizes) : {};
+    const languages = hai_data.generator.languages ? Object.entries(hai_data.generator.languages) : {};
 
     return (
         <Box sx={{
