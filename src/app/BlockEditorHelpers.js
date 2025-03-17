@@ -1,4 +1,5 @@
 import { buttonActionTypes, stripHtml } from "./Helpers";
+const { insertBlocks } = wp.data.dispatch('core/block-editor');
 
 export function ApplyContentToEditor({content, type, block = null, options}) {    
     const getEditorContext = () => {
@@ -158,11 +159,11 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
         return false;
     };
 
-    const simulateTyping = (fullText, callback, speed = 10) => {
+    const simulateTyping = (fullText, callback, speed = 4) => {
         let currentText = '';
         let currentIndex = 0;
     
-        const adjustedSpeed = fullText.length > 500 ? 5 : speed;
+        const adjustedSpeed = fullText.length > 200 ? 2 : speed;
     
         const typingInterval = setInterval(() => {
             currentText += fullText.charAt(currentIndex);
@@ -258,10 +259,21 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
                             }
                         );
                     } else {
-                        wp.data.dispatch('core/block-editor').updateBlock(
-                            context.element.clientId, 
-                            { attributes: { url: content, align: 'center' } }
-                        );
+                        if (context.element?.name != 'core/image') {
+                            const newImageBlock = wp.blocks.createBlock('core/image', {
+                                url: content,
+                                align: 'center',
+                            });
+
+                            console.log(newImageBlock);
+
+                            insertBlocks(newImageBlock);
+                        } else {
+                            wp.data.dispatch('core/block-editor').updateBlock(
+                                context.element.clientId, 
+                                { attributes: { url: content, align: 'center' } }
+                            );
+                        }
                     }
                 }
                 break;
@@ -384,7 +396,7 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
     const applyMedia = () => {
         let postThumbnailImg = block.querySelector('#set-post-thumbnail img');
         let postThumbnailInput = block.querySelector('#_thumbnail_id');
-        
+
         switch (options.buttonAction) {
             case buttonActionTypes.mediasPage:
                 if (wp && wp.media && wp.media.frame && wp.media.frame.content) {
@@ -489,7 +501,14 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
         }
     };
 
-    if(options?.id && options?.buttonAction){
+    let inMedias = [
+        buttonActionTypes.mediasPage,
+        buttonActionTypes.blockPostThumbnail,
+        buttonActionTypes.editorPostThumbnail,
+        buttonActionTypes.editorProductGallery
+    ];
+    
+    if (options?.id && options?.buttonAction && inMedias.includes(options.buttonAction)) {
         applyMedia();
     } else {
         insertContent();

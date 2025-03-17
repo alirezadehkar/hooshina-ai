@@ -33,7 +33,6 @@ export const ButtonsInitialize = () => {
         className = !className ? priClassName + ' wp-block' : priClassName + ' ' + className;
     
         const handleButtonOnClick = (e) => {
-            console.log(type);
             setModalType(type);
             setButtonAction(action);
             if (typeof onClick === 'function') {
