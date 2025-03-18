@@ -43,7 +43,7 @@
     </div>
     <div class="hooshina-ai-summary-content-wrap">
         <div class="hooshina-ai-summary-content">
-            <p><?php echo esc_html($reviewsSummary) ?></p>
+            <?php echo wp_kses_post($reviewsSummary) ?>
         </div>
         
         <div class="hooshina-ai-summary-content-foot">
