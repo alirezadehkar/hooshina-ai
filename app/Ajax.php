@@ -197,7 +197,9 @@ class Ajax
         if($isReviewsSummary){
             $productId = $objectId;
 
-            if(!wc_get_product($productId)){
+            $product = wc_get_product($productId);
+
+            if(!$product){
                 wp_send_json_error([
                     'msg' => __('Product not found.', 'hooshina-ai'),
                     'status' => 'error'
@@ -229,6 +231,10 @@ class Ajax
             }
             
             $reviewsText = '';
+
+            $productTitle = $product->get_title();
+            $reviewsText .= "Product Title: {$productTitle}\n\n";
+
             foreach ($reviews as $review) {
                 $reviewsText .= "Review: {$review->comment_content}\n\n";
             }
@@ -244,7 +250,14 @@ class Ajax
                 ]);
             }
     
-            $text = $comment->comment_content;
+            $postTitle = get_the_title($comment->comment_post_ID);
+
+            $text = '';
+            if($postTitle){
+                $text = "Post Title: {$postTitle}\n\n";
+            }
+
+            $text .= 'Comment Text: ' . $comment->comment_content;
             $promptId = Generator::COMMENT_PROMPT_ID;
         }
 

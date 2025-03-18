@@ -1,7 +1,6 @@
 import {
     useState,
     useEffect,
-    useTransition,
     Suspense,
 } from '@wordpress/element';
 import {
