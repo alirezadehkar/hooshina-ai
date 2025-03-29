@@ -13,6 +13,7 @@ import { useMutationObserver, CustomTheme, buttonActionTypes, HooshinaIcon } fro
 import { OpenGeneratorModal } from './GeneratorModal';
 
 export const ButtonsInitialize = () => {
+    const [isButtonsLoaded, setIsButtonsLoaded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedBlock, setSelectedBlock] = useState(null);
     const [modalType, setModalType] = useState('text');
@@ -399,6 +400,18 @@ export const ButtonsInitialize = () => {
     };
 
     const handleClose = () => setIsOpen(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsButtonsLoaded(true);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (!isButtonsLoaded) {
+        return null;
+    }
 
     return (
         <>

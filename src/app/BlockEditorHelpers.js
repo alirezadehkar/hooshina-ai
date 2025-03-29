@@ -1,7 +1,7 @@
 import { buttonActionTypes, stripHtml } from "./Helpers";
 const { insertBlocks } = wp.data.dispatch('core/block-editor');
 
-export function ApplyContentToEditor({content, type, block = null, options}) {    
+export function ApplyContentToEditor({content, type, block = null, options}) {     
     const getEditorContext = () => {
         if (block && block.name) {
             return {
@@ -26,7 +26,7 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
             };
         }
 
-        const classicEditorContent = block.querySelector('.wp-editor-area');
+        const classicEditorContent = block.querySelector('.wp-editor-area') || block?.parentNode?.querySelector('.wp-editor-area') || block?.parentNode?.parentNode?.querySelector('.wp-editor-area') || block?.parentNode?.parentNode?.parentNode?.querySelector('.wp-editor-area');
         if (classicEditorContent) {
             return {
                 type: 'classic-editor',
