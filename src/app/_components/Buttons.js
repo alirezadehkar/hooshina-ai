@@ -1,9 +1,7 @@
-import { useState, useEffect, createPortal, useMemo, Fragment } from '@wordpress/element';
+import { useState, useEffect, createPortal, useMemo, Fragment, useRef } from '@wordpress/element';
 import { BlockControls, MediaReplaceFlow } from '@wordpress/block-editor';
 import { addFilter } from '@wordpress/hooks';
 import { useSelect } from '@wordpress/data';
-import { registerPlugin } from '@wordpress/plugins';
-import { PluginBlockSettingsMenuItem } from '@wordpress/edit-post';
 import { createHigherOrderComponent } from '@wordpress/compose';
 
 import { Button as WpButton, ToolbarGroup, ToolbarButton } from '@wordpress/components';
@@ -18,6 +16,31 @@ export const ButtonsInitialize = () => {
     const [selectedBlock, setSelectedBlock] = useState(null);
     const [modalType, setModalType] = useState('text');
     const [buttonAction, setButtonAction] = useState(null);
+    const [renderedDelay, setRenderedDelay] = useState(false);
+    const renderedButtonsRef = useRef([]);
+
+    const DelayedButton = ({ delay, children }) => {
+        const [shouldRender, setShouldRender] = useState(delay ? false : true);
+
+        useEffect(() => {
+            let timer;
+            if (delay) {
+                timer = setTimeout(() => {
+                    setShouldRender(true);
+                    setRenderedDelay(true);
+                }, delay * 1000);
+            }
+            
+            return () => {
+                if (timer) {
+                    clearTimeout(timer);
+                    setRenderedDelay(false);
+                };
+            };
+        }, [delay]);
+
+        return shouldRender ? children : null;
+    };
 
     const createPortalButton = ({
         Container,
@@ -28,6 +51,7 @@ export const ButtonsInitialize = () => {
         isTextButton = false,
         action = null,
         position = null,
+        delay = null
     }) => {
         type = !type ? 'text' : type;
         let priClassName = `hai-button-wrap hai-${type}-type-button-wrap`;
@@ -68,7 +92,7 @@ export const ButtonsInitialize = () => {
             </div>
         );
     
-        return Container.map((selector) => {
+        const renderPortal = (selector) => {
             if (!selector || !(selector instanceof Node)) return null;
     
             const existingPortal = selector.parentNode.querySelector('[data-hai-portal]');
@@ -82,7 +106,13 @@ export const ButtonsInitialize = () => {
                 selector.appendChild(tempContainer);
             }
     
-            const portal = createPortal(buttonElement, tempContainer);
+            const finalButtonElement = delay ? (
+                <DelayedButton delay={delay}>
+                    {buttonElement}
+                </DelayedButton>
+            ) : buttonElement;
+            
+            const portal = createPortal(finalButtonElement, tempContainer);
     
             if (position && selector.parentNode) {
                 if (position === 'before') {
@@ -96,11 +126,13 @@ export const ButtonsInitialize = () => {
             }
     
             return portal;
-        }).filter(Boolean);
+        };
+    
+        return Container.map(renderPortal).filter(Boolean);
     };
 
-    const LargeButton = ({ selector, text, onClick, type = null, className = null, action = null, position = null }) => {
-        const containers = useMutationObserver(selector);
+    const LargeButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null }) => {
+        const containers = useMutationObserver(selector, insideIframe, iframeSelector);
         return useMemo(() => createPortalButton({
             Container: containers, 
             onClick: onClick, 
@@ -108,12 +140,15 @@ export const ButtonsInitialize = () => {
             text: text || hai_data.texts.large_button, 
             className: className,
             action: action,
-            position: position
-        }), [containers, text, onClick, type, className, action, position]);
+            position: position,
+            delay: delay,
+            insideIframe: insideIframe,
+            iframeSelector: iframeSelector
+        }), [containers, text, onClick, type, className, action, position, delay, insideIframe, iframeSelector]);
     };
     
-    const TextButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null }) => {
-        const containers = useMutationObserver(selector);
+    const TextButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null }) => {
+        const containers = useMutationObserver(selector, insideIframe, iframeSelector);
         return useMemo(() => createPortalButton({
             Container: containers, 
             onClick: onClick, 
@@ -122,17 +157,20 @@ export const ButtonsInitialize = () => {
             className: className,
             isTextButton: true,
             action: action,
-            position: position
-        }), [containers, text, onClick, type, className, action, position]);
+            position: position,
+            delay: delay,
+            insideIframe: insideIframe,
+            iframeSelector: iframeSelector
+        }), [containers, text, onClick, type, className, action, position, delay, insideIframe, iframeSelector]);
     };
 
     const buttonConfigs = [
         {
-            selector: "[class*='editor__post-title-wrapper']",
+            selector: ".edit-post-header .editor-header__center",
             text: hai_data.texts.title_generate,
             isTextButton: false,
             type: "text",
-            action: buttonActionTypes.blockPostTitle
+            action: buttonActionTypes.blockPostTitle,
         },
         {
             selector: "#titlewrap",
@@ -409,18 +447,25 @@ export const ButtonsInitialize = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    if (!isButtonsLoaded) {
-        return null;
-    }
+    useEffect(() => {
+        if (renderedButtonsRef.current.length === 0) {
+            const rendered = buttonConfigs.map((config) => {
+                const ButtonComponent = config.isTextButton ? TextButton : LargeButton;
+                return (
+                    <ButtonComponent
+                        key={JSON.stringify(config)}
+                        {...config}
+                    />
+                );
+            });
+            renderedButtonsRef.current = rendered;
+        }
+    }, [isButtonsLoaded, renderedDelay]);
 
     return (
         <>
             <ThemeProvider theme={CustomTheme}>
-                {
-                    buttonConfigs.map(config => (
-                        config.isTextButton ? <TextButton {...config} /> : <LargeButton {...config} />
-                    ))
-                }
+                {renderedButtonsRef.current}
             
                 <OpenGeneratorModal 
                     isOpen={isOpen}

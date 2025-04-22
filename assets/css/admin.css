@@ -84,6 +84,7 @@ html[dir="rtl"] .MuiButton-startIcon {
     position: absolute;
     top: 0;
     max-width: 840px;
+    height: 70px;
     margin: 0 auto 0 auto;
     left: 24%;
 }
@@ -293,4 +294,8 @@ button.MuiButton-root.Mui-disabled {
     filter: grayscale(1);
     pointer-events: none;
     user-select: none;
+}
+
+.edit-post-header .editor-header__center .hai-button-wrap {
+    margin: 0 10px;
 }

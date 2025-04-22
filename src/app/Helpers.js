@@ -2,32 +2,72 @@ import {createTheme} from "@mui/material";
 
 const { useState, useEffect, useRef } = window.wp.element;
 
-export function useMutationObserver(selector) {
+export function useMutationObserver(
+    selector,
+    insideIframe = false,
+    iframeSelector = null
+) {
     const [elements, setElements] = useState([]);
-    const initialized = useRef(false);
 
     useEffect(() => {
-        const updateElements = () => {
-            const selectedElements = Array.from(document.querySelectorAll(selector));
-            const newElementsData = selectedElements.map(el => el.id || el.className || el.tagName);
-            
-            const currentElementsData = elements.map(el => el.id || el.className || el.tagName);
-            
-            if (JSON.stringify(newElementsData) !== JSON.stringify(currentElementsData)) {
-                setElements(selectedElements);
+        let observer;
+        let iframeObserver;
+
+        const startObserve = (targetDocument) => {
+            const update = () => {
+                const found = Array.from(targetDocument.querySelectorAll(selector));
+                setElements(prev =>
+                    prev.length === found.length && prev.every((n, i) => n === found[i])
+                        ? prev
+                        : found
+                );
+            };
+
+            observer = new MutationObserver(update);
+            observer.observe(targetDocument.body, { childList: true, subtree: true });
+            update();        
+        };
+
+        if (!insideIframe) {
+            startObserve(document);
+            return () => observer?.disconnect();
+        }
+
+        const iframeEl = document.querySelector(iframeSelector);
+
+        if (!iframeEl) {
+            return;
+        }        
+
+        const handleIframeReady = () => {
+            const iframeDoc = iframeEl?.contentDocument;
+            if (!iframeDoc) return;
+
+            iframeObserver = new MutationObserver((muts, obs) => {
+                if (iframeDoc.body) {
+                    obs.disconnect();   
+                    startObserve(iframeDoc);
+                }
+            });
+            iframeObserver.observe(iframeDoc, { childList: true, subtree: true });
+
+            if (iframeDoc.body) {
+                iframeObserver.disconnect();
+                startObserve(iframeDoc);
             }
         };
 
-        const observer = new MutationObserver(updateElements);
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        if (!initialized.current) {
-            updateElements();
-            initialized.current = true;
+        if (iframeEl?.contentDocument?.readyState === 'complete') {
+            handleIframeReady();
+        } else {
+            iframeEl.addEventListener('load', handleIframeReady, { once: true });
         }
 
-        return () => observer.disconnect();
-    }, [selector, elements]);
+        return () => {
+            observer?.disconnect();
+            iframeObserver?.disconnect();
+        };
+    }, [selector, insideIframe, iframeSelector]);
 
     return elements;
 }

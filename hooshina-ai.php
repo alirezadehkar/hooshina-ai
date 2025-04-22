@@ -4,7 +4,7 @@
  * Plugin URI: https://hooshina.com
  * Author: Hooshina
  * Author URI: https://Hooshina.com
- * Version: 1.0
+ * Version: 1.0.3
  * Description: Intelligent image and text production with the help of Hooshina Ai.
  * Text Domain: hooshina-ai
  * Domain Path: /languages
