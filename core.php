@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) {
 use HooshinaAi\App\AdminMenu;
 use HooshinaAi\App\Assets;
 use HooshinaAi\App\Options;
+use HooshinaAi\App\mihanwpUpdater;
 
 final class Hooshina_Ai_Plugin {
     private static $instance = null;
@@ -30,6 +31,8 @@ final class Hooshina_Ai_Plugin {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_front_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('elementor/editor/before_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+
+        add_action('plugins_loaded', [$this, 'handleUpdater']);
     }
 
     /**
@@ -133,5 +136,21 @@ final class Hooshina_Ai_Plugin {
                 printf('<div class="notice notice-error notice-alt"> <p><strong>%s</strong> %s</p> </div>', esc_html($title), esc_html(implode('<hr>', $errors)));
             }, 1);
         }
+    }
+
+    public function handleUpdater()
+    {
+        $plugin_data = get_file_data(HOOSHINA_AI_PLUGIN_FILE_PATH, array('Version' => 'Version'), false);
+        $plugin_version = $plugin_data['Version'];
+        $updaterArgs = [
+            'base_api_server' => 'https://mihanwp.com',
+            'license_key' => 'free',
+            'item_id' => 1152433,
+            'current_version' => $plugin_version,
+            'plugin_slug' => plugin_basename(HOOSHINA_AI_PLUGIN_FILE_PATH),
+            'license_status' => true,
+        ];
+
+        mihanwpUpdater::init($updaterArgs);
     }
 }
