@@ -144,6 +144,11 @@ class Connection
         return is_object($tokenData) && isset($tokenData->auth) ? $tokenData->auth : null;
     }
 
+    public static function getConnectionSiteKey()
+    {
+        return self::isConnected();
+    }
+
     public function getWalletBalance()
     {
         $auth = self::getConnectionAuth();

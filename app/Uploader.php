@@ -6,12 +6,12 @@ use stdClass;
 
 class Uploader
 {
-    private $file;
+    private $fileUrl;
     private $postId;
 
-    public function __construct($file, $postId = null)
+    public function __construct($fileUrl, $postId = null)
     {
-        $this->file = $file;
+        $this->fileUrl = $fileUrl;
         $this->postId = $postId;
     }
 
@@ -20,7 +20,7 @@ class Uploader
         $data = new stdClass;
         $params = [];
 
-        $file = $this->file;
+        $file = $this->fileUrl;
 
         try{
             add_filter('upload_mimes', function ($existing_mimes){

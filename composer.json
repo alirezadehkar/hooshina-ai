@@ -1,5 +1,6 @@
 {
     "require": {
-        "netcarver/textile": "^4.1"
+        "netcarver/textile": "^4.1",
+        "erusev/parsedown": "^1.7"
     }
 }

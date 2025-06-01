@@ -6,10 +6,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HooshinaAi\App\AdminMenu;
 use HooshinaAi\App\Assets;
 use HooshinaAi\App\Options;
 use HooshinaAi\App\mihanwpUpdater;
+use HooshinaAi\App\Api\Post\CreatePost as CreatePostApi;
+use HooshinaAi\App\Hooks;
 
 final class Hooshina_Ai_Plugin {
     private static $instance = null;
@@ -48,7 +49,9 @@ final class Hooshina_Ai_Plugin {
 
         $this->register_autoload();
 
-        \HooshinaAi\App\Hooks::init();
+        Hooks::init();
+        
+        new CreatePostApi();
     }
 
     public function enqueue_front_assets()
