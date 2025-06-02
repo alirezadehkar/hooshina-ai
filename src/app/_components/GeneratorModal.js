@@ -75,6 +75,26 @@ export function OpenGeneratorModal({ isOpen, onClose, type = 'text', selectedBlo
         }
     }
 
+    const fetchHasBalance = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(hai_data.ajax_url, qs.stringify({
+                action: 'hai_check_account_balance',
+                nonce: hai_data.nonce
+            }));
+
+            if (response?.data?.success) {
+                return response;
+            } else {
+                setLoadingBalance(false);
+            }
+        } catch {
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         if (isOpen) {
             setLoading(true);
@@ -87,30 +107,35 @@ export function OpenGeneratorModal({ isOpen, onClose, type = 'text', selectedBlo
             setImageSize(hai_data.generator.defaults.image_size);
             setContentLang(hai_data.generator.defaults.content_lang);
             setContentTone(hai_data.generator.defaults.content_tone); 
-            
-            setShowCommentReply(options?.action == buttonActionTypes.commentReply || options?.action == buttonActionTypes.productReviewReply);
 
-            setShowReviewsSummary(options?.action == buttonActionTypes.productReviewsSummary);
+            fetchHasBalance().then(hasBalance => {
+                if (!hasBalance) {
+                    setData({ insufficient_balance: true });
+                } else {
+                    setShowCommentReply(options?.action == buttonActionTypes.commentReply || options?.action == buttonActionTypes.productReviewReply);
+                    setShowReviewsSummary(options?.action == buttonActionTypes.productReviewsSummary);
 
-            let checkConnection = setInterval(() => {
-                fetchData().then(res => {
-                    if(!res){
-                        setError(true);
-                        setLoadingBalance(false);
-                    } else {
-                        setError(false);
-
-                        fetchBalanceValue().then(res => {
-                            if(res){
-                                setBalanceValue(res.data.data.htmlValue);
+                    let checkConnection = setInterval(() => {
+                        fetchData().then(res => {
+                            if(!res){
+                                setError(true);
                                 setLoadingBalance(false);
+                            } else {
+                                setError(false);
+
+                                fetchBalanceValue().then(res => {
+                                    if(res){
+                                        setBalanceValue(res.data.data.htmlValue);
+                                        setLoadingBalance(false);
+                                    }
+                                });
+
+                                clearInterval(checkConnection);
                             }
                         });
-
-                        clearInterval(checkConnection);
-                    }
-                });
-            }, 2500);
+                    }, 2500);
+                }
+            });
         }
     }, [isOpen]);
 
@@ -170,7 +195,10 @@ export function OpenGeneratorModal({ isOpen, onClose, type = 'text', selectedBlo
                                 <Divider orientation="vertical" variant="middle" flexItem />
 
                                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', color: 'text.secondary' }}>
-                                    {loadingBalance ? (<CircularProgress size="20px" />) : (balanceValue ? balanceValue : '')}
+                                    {loadingBalance ? 
+                                        (<CircularProgress size="20px" />) : 
+                                        (!data?.insufficient_balance && balanceValue ? balanceValue : '')
+                                    }
 
                                     <Button href={hai_data.chargePageUrl} target="_blank" sx={{ padding: '4px 11px' }}>
                                         {hai_data.texts.charge_account}
@@ -198,6 +226,19 @@ export function OpenGeneratorModal({ isOpen, onClose, type = 'text', selectedBlo
                                 </Typography>
                                 <Button href={hai_data.pluginOptionsUrl} target="_blank" variant="contained" color="primary">
                                     { hai_data.texts.connect_button }
+                                </Button>
+                            </Box>
+                        ) : data?.insufficient_balance ? (
+                            <Box sx={{ p: 2, textAlign: 'center' }}>
+                                <AutoAwesomeIcon sx={{ fontSize: 40, color: 'text.primary', mb: 2 }} />
+                                <Typography variant="h6" color="text.primary">
+                                    { hai_data.texts.insufficient_balance }
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                    { hai_data.texts.insufficient_balance_description }
+                                </Typography>
+                                <Button href={hai_data.chargePageUrl} target="_blank" variant="contained" color="primary">
+                                    { hai_data.texts.charge_account }
                                 </Button>
                             </Box>
                         ) : (
