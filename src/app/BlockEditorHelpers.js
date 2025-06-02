@@ -148,10 +148,52 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
                 return true;
             } else if(rankMathStore){
                 if(rankMathEditorController){
-                    rankMathEditorController.updateKeywords(stripHtml(content));
+                    const keyword = stripHtml(content);
+                    rankMathEditorController.updateKeywords(keyword);
+
+                    const addKeywordToRankMathTagify = (keyword) => {
+                        try {
+                            const tagifyComponent = window.rankMathEditor?.focusKeywordField?.tagifyField?.current?.component;
+                    
+                            if (tagifyComponent) {
+                                const currentKeywordsArray = tagifyComponent.value ? JSON.parse(tagifyComponent.value) : [];
+                    
+                                if (!Array.isArray(currentKeywordsArray)) {
+                                    console.error("Rank Math tagifyComponent.value did not parse to an array:", tagifyComponent.value);
+                                    const tempValue = tagifyComponent.tagifyValue;
+                                     if (tempValue && Array.isArray(tempValue)) {
+                                         currentKeywordsArray = tempValue;
+                                     } else {
+                                        currentKeywordsArray = [];
+                                     }
+                                }
+                    
+                                const keywordExists = currentKeywordsArray.some(item => item.value === keyword);
+                    
+                                if (!keywordExists) {
+                                    currentKeywordsArray.push({ value: keyword });
+                    
+                                    tagifyComponent.value = JSON.stringify(currentKeywordsArray);
+                                    
+                                    const inputElement = tagifyComponent.DOM.input;
+                                    if (inputElement) {
+                                         inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                                         inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+                                    }
+                                }
+                            } else {
+                                console.warn("Rank Math Tagify component not found.");
+                            }
+                        } catch (e) {
+                            console.error("Error adding keyword to Rank Math Tagify:", e);
+                        }
+                    };
+                    
+                    addKeywordToRankMathTagify(keyword);
+
                     refreshRankMathEditor();
                 }
-
+                
                 return true;
             }
         }
