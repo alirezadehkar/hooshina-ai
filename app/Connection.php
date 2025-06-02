@@ -233,4 +233,32 @@ class Connection
             wp_schedule_event($timestamp, 'daily', 'hai_event_hooshina_connection_checker');
         }
     }
+
+    public static function verifySiteKey($siteKey)
+    {
+        $apiUrl = self::getApiBaseUrl() . 'connect/verify-site-key';
+        
+        $ch = curl_init();
+        
+        curl_setopt($ch, CURLOPT_URL, $apiUrl . '?site_key=' . urlencode($siteKey));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        curl_close($ch);
+        
+        if ($httpCode == 200 && $response) {
+            $result = json_decode($response);
+            return $result && isset($result->verified) ? $result->verified : false;
+        }
+        
+        return false;
+    }
 }

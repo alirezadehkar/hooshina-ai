@@ -16,7 +16,7 @@ class ApiKeyMiddleware {
             );
         }
 
-        if ($api_key !== Connection::getConnectionSiteKey()) {
+        if ($api_key !== Connection::getConnectionSiteKey() || !Connection::verifySiteKey($api_key)) {
             return new \WP_Error(
                 'rest_forbidden',
                 __('Invalid API key.', 'hooshina-ai'),
