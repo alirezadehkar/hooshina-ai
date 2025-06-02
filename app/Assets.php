@@ -87,7 +87,7 @@ class Assets {
 
             'pluginOptionsUrl' => AdminMenu::get_options_url(),
 
-            'chargePageUrl' => Connection::CHARGE_PAGE_URL,
+            'chargePageUrl' => Connection::get_charge_page_url(),
 
             'generator' => [
                 'types' => $types,
@@ -156,7 +156,9 @@ class Assets {
                     'maximumSelected' => __('You can only select %d items', 'hooshina-ai'),
                     'noResults' => __('No results found', 'hooshina-ai'),
                     'searching' => __('Searching...', 'hooshina-ai')
-                ]
+                ],
+                'insufficient_balance' => __('Your account balance is insufficient', 'hooshina-ai'),
+                'insufficient_balance_description'=> __('To use Hooshina services, you must top up your account.', 'hooshina-ai'),
             ]
         );
 

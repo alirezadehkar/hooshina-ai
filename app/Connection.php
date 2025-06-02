@@ -15,12 +15,21 @@ class Connection
 
     private static $connectionOptionKey = 'hooshina_connection_token';
     
-    const CHARGE_PAGE_URL = 'https://app.hooshina.com/panel/credits';
-
     public function __construct()
     {
         add_action('hai_event_hooshina_connection_checker', [__CLASS__, 'handle_event_check_connection_status']);
         add_action('admin_init', [__CLASS__, 'handle_register_cron']);
+    }
+
+    public static function get_charge_page_url()
+    {
+        $url = self::$baseUrl . 'panel/credits';
+
+        if(Helper::get_locale() != 'fa'){
+            $url = add_query_arg('lang', 'en', $url);
+        }
+
+        return $url;
     }
 
     private static function getBaseUrl()

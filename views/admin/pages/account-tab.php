@@ -16,7 +16,7 @@ if($accountBalance):
         <div class="hai-account-balance">
             <span><?php echo esc_html($htmlValue) ?></span>
 
-            <a href="<?php echo esc_attr(HooshinaAi\App\Connection::CHARGE_PAGE_URL) ?>" target="_blank"><?php esc_html_e('Charge Account', 'hooshina-ai') ?></a>
+            <a href="<?php echo esc_attr(HooshinaAi\App\Connection::get_charge_page_url()) ?>" target="_blank"><?php esc_html_e('Charge Account', 'hooshina-ai') ?></a>
         </div>
     </div>
 <?php endif ?>
