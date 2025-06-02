@@ -20,30 +20,45 @@ class Settings
             exit('Sorry, your nonce did not verify!');
         }
 
-        $options = [
-            'default_content_tone' => [],
-            'default_image_style' => [],
-            'default_product_image_style' => [],
-            'default_image_size' => [],
+        $tabs = [
+            'content-generation' => [
+                'default_content_tone' => [],
+                'default_image_style' => [],
+                'default_product_image_style' => [],
+                'default_image_size' => [],
+            ],
+            'auto-content-generation' => [
+                'default_post_type' => [],
+                'default_post_status' => [],
+                'default_author' => [],
+                'default_taxonomy' => [],
+                'default_category' => [],
+            ] 
         ];
 
-        if($options){
-            foreach ($options as $key => $value){
-                $type = isset($value['type']) ? $value['type'] : null;
-                if($type == 'checkbox'){
-                    self::update_option($key, isset($_POST[$key]));
-                } else {
-                    if(isset($_POST[$key])){
-                        $option = sanitize_text_field(wp_unslash($_POST[$key]));
-                        self::update_option($key, $option);
-                    } else {
-                        self::delete_option($key);
-                    }
+        if($tabs){
+            foreach($tabs as $tab => $options){
+                if(self::get_current_tab() == $tab || self::get_current_subtab() == $tab){
+                    foreach ($options as $key => $value){
+                        $type = isset($value['type']) ? $value['type'] : null;
+                        if($type == 'checkbox'){
+                            self::update_option($key, isset($_POST[$key]));
+                        } else {
+                            if(isset($_POST[$key])){
+                                $option = sanitize_text_field(wp_unslash($_POST[$key]));
+                                self::update_option($key, $option);
+                            }
+                        }
+                    } 
                 }
             }
         }
         
         Notice::displaySuccess(__('Settings saved successfully.', 'hooshina-ai'));
+
+        $subtab = self::get_current_subtab();
+        wp_redirect(add_query_arg('subtab', $subtab));
+        exit;
     }
 
     public static function get_option($key, $default = null){
@@ -78,6 +93,40 @@ class Settings
         return self::get_option('default_image_size', '1792x1024');
     }
 
+    public static function get_default_post_type()
+    {
+        return self::get_option('default_post_type', 'post');
+    }
+
+    public static function get_default_post_status()
+    {
+        return self::get_option('default_post_status', 'draft');
+    }
+
+    public static function get_default_author()
+    {
+        $author = self::get_option('default_author');
+        if (!$author) {
+            $admins = get_users(['role' => 'administrator', 'number' => 1]);
+            if (!empty($admins)) {
+                $author = $admins[0]->ID;
+            } elseif(is_user_logged_in()) {
+                $author = get_current_user_id();
+            }
+        }
+        return $author;
+    }
+
+    public static function get_default_taxonomy()
+    {
+        return self::get_option('default_taxonomy', 'category');
+    }
+
+    public static function get_default_category()
+    {
+        return self::get_option('default_category', get_option('default_category'));
+    }
+
     public static function get_current_tab()
     {
         $items = self::get_menu_items();
@@ -91,6 +140,18 @@ class Settings
         }
     
         return $keys[array_key_first($keys)];
+    }
+
+    public static function get_current_subtab()
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $currentSubtab = isset($_GET['subtab']) ? sanitize_key(wp_unslash($_GET['subtab'])) : null;
+        
+        if ($currentSubtab && in_array($currentSubtab, ['content-generation', 'auto-content-generation'], true)) {
+            return $currentSubtab;
+        }
+        
+        return 'content-generation';
     }
 
     public static function get_menu_items()
@@ -110,6 +171,7 @@ class Settings
     public static function render_options_content()
     {
         $tab = self::get_current_tab();
+        $subtab = self::get_current_subtab();
 
         $contentTones = GeneratorHelper::get_content_tones();
         $imageStyles = GeneratorHelper::get_image_styles(Generator::TextToImage);
@@ -120,6 +182,11 @@ class Settings
         $defImageStyle = self::get_default_image_style();
         $defProductImageStyle = self::get_default_product_image_style();
         $defImageSize = self::get_default_image_size();
+        $defPostType = self::get_default_post_type();
+        $defPostStatus = self::get_default_post_status();
+        $defAuthor = self::get_default_author();
+        $defTaxonomy = self::get_default_taxonomy();
+        $defCategory = self::get_default_category();
 
         $accountBalance = (new Account)->get_balance();
 
@@ -132,7 +199,13 @@ class Settings
             'defImageStyle',
             'defProductImageStyle',
             'defImageSize',
+            'defPostType',
+            'defPostStatus',
+            'defAuthor',
+            'defTaxonomy',
+            'defCategory',
             'accountBalance',
+            'subtab'
         ));
     }
 }

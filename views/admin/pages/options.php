@@ -2,7 +2,7 @@
     <h1 class="wp-heading-inline"></h1>
     <hr class="wp-header-end">
     <div class="wrap-body hai-options">
-        <form method="post">
+        <form method="post" id="hai-options-form">
             <div class="hai-admin-wrap hai-<?php echo is_rtl() ? 'rtl' : 'ltr' ?>">
                 <div class="hai-admin-section hai-admin-sidebar">
                     <div class="hai-admin-head">
@@ -13,7 +13,7 @@
                         <ul>
                             <?php foreach(HooshinaAi\App\Settings::get_menu_items() as $key => $item): ?>
                                 <li class="<?php echo HooshinaAi\App\Settings::get_current_tab() == $key ? 'active' : '' ?>">
-                                    <a href="<?php echo esc_attr(add_query_arg('tab', esc_attr($key))) ?>">
+                                    <a href="<?php echo esc_attr(add_query_arg('tab', esc_attr($key), remove_query_arg('subtab'))) ?>">
                                         <span class="hai-tab-icon hai-tab-<?php echo esc_attr($key) ?>-icon"></span>
                                         <?php echo esc_html($item['title']) ?>
                                     </a>

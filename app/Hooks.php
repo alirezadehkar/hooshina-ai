@@ -23,6 +23,14 @@ class Hooks
 
             add_action('woocommerce_product_options_advanced', ['\HooshinaAi\App\Callback', 'handle_wc_edit_advanced_tab']);
             add_action('woocommerce_admin_process_product_object', ['\HooshinaAi\App\Callback', 'handle_save_edit_product_data']);
+
+            add_action('wp_ajax_hai_get_terms_by_taxonomy', ['\HooshinaAi\App\Ajax', 'handle_get_terms_by_taxonomy']);
+
+            add_action('wp_ajax_hai_search_users', ['\HooshinaAi\App\Ajax', 'handle_search_users']);
+
+            add_action('admin_init', ['\HooshinaAi\App\Callback', 'handle_connection_notices']);
+            
+            add_action('wp_ajax_hai_dismiss_remind_notice', ['\HooshinaAi\App\Ajax', 'handle_dismiss_remind_notice']);
         } else {
             add_action('comment_form_before', ['\HooshinaAi\App\Callback', 'handle_show_ai_reviews_excerpt']);
         }

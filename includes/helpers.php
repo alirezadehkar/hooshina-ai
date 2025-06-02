@@ -35,3 +35,17 @@ function hooshina_ai_get_asset_data($key = null)
     return is_object($data) ? (isset($key) && isset($data->{$key}) ? $data->{$key} : $data) : null;
 }
 
+function hooshina_ai_noconnect_placeholder($return = false)
+{
+    $path = HOOSHINA_AI_VIEW_PATH . 'admin/noconnect-placeholder.php';
+    if (!file_exists($path))
+        return false;
+
+    if ($return) {
+        ob_start();
+        include $path;
+        return ob_get_clean();
+    }
+
+    include $path;
+}

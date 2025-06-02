@@ -102,6 +102,7 @@ class Assets {
                     'image_size' => Settings::get_default_image_size(),
                     'content_lang' => Helper::get_current_lang(),
                     'content_tone' => Settings::get_default_content_tone(),
+                    'post_category' => Settings::get_default_category()
                 ]
             ],
 
@@ -146,6 +147,16 @@ class Assets {
                 'charge_account' => __('Charge Account', 'hooshina-ai'),
                 'product_review_generate' => __('Generate customer reviews summary with Hooshina Ai', 'hooshina-ai'),
                 'image_replace_button' => __('Image replace with Hooshina Ai', 'hooshina-ai'),
+                'select' => __('Select...', 'hooshina-ai'),
+                'select2' => [
+                    'errorLoading' => __('The results could not be loaded.', 'hooshina-ai'),
+                    'inputTooLong' => __('Please delete %d characters', 'hooshina-ai'),
+                    'inputTooShort' => __('Please enter %d or more characters', 'hooshina-ai'),
+                    'loadingMore' => __('Loading more results...', 'hooshina-ai'),
+                    'maximumSelected' => __('You can only select %d items', 'hooshina-ai'),
+                    'noResults' => __('No results found', 'hooshina-ai'),
+                    'searching' => __('Searching...', 'hooshina-ai')
+                ]
             ]
         );
 

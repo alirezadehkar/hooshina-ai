@@ -10,6 +10,7 @@ use HooshinaAi\App\Assets;
 use HooshinaAi\App\Options;
 use HooshinaAi\App\mihanwpUpdater;
 use HooshinaAi\App\Api\Post\CreatePost as CreatePostApi;
+use HooshinaAi\App\Connection;
 use HooshinaAi\App\Hooks;
 
 final class Hooshina_Ai_Plugin {
@@ -58,13 +59,18 @@ final class Hooshina_Ai_Plugin {
     {
         Assets::enqueue_style('hooshina-ai-style', Assets::get_css('style'));
 
-        Assets::enqueue_script('hooshina-ai-script', HOOSHINA_AI_JS_URL . 'script.js', [], null, true);
+        Assets::enqueue_script('hooshina-ai-script', Assets::get_js('script'), [], null, true);
         Assets::localize_script('hooshina-ai-script', 'hai_data', Assets::get_localize_data());
     }
     
     public function enqueue_admin_assets()
     {
+        Assets::enqueue_style('select2', Assets::get_css('select2.min'), [], '4.1.0');
         Assets::enqueue_style('hooshina-ai-admin', Assets::get_css('admin'));
+
+        Assets::enqueue_script('hooshina-ai-admin', Assets::get_js('admin'), ['jquery', 'select2'], null, true);
+        Assets::enqueue_script('select2', Assets::get_js('select2.min'), ['jquery'], '4.1.0', true);
+        Assets::localize_script('hooshina-ai-admin', 'hai_data', Assets::get_localize_data());
 
         Assets::enqueue_script('hooshina-ai-script', HOOSHINA_AI_BUILD_URL . 'index.js', ['wp-element', 'wp-components', 'wp-i18n', 'wp-hooks', 'wp-blocks', 'wp-rich-text', 'wp-editor'], hooshina_ai_get_asset_data('version'), true);
         Assets::localize_script('hooshina-ai-script', 'hai_data', Assets::get_localize_data());
@@ -143,8 +149,7 @@ final class Hooshina_Ai_Plugin {
 
     public function handleUpdater()
     {
-        $plugin_data = get_file_data(HOOSHINA_AI_PLUGIN_FILE_PATH, array('Version' => 'Version'), false);
-        $plugin_version = $plugin_data['Version'];
+        $plugin_version = hooshina_ai_get_version();
         $updaterArgs = [
             'base_api_server' => 'https://mihanwp.com',
             'license_key' => 'free',

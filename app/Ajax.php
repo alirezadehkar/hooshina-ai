@@ -364,4 +364,81 @@ class Ajax
             'status' => 'success'
         ]);
     }
+
+    public static function handle_get_terms_by_taxonomy()
+    {
+        check_ajax_referer('hooshina_ai_nonce', 'nonce');
+    
+        $taxonomy = sanitize_key($_POST['taxonomy']);
+        if (!taxonomy_exists($taxonomy)) {
+            wp_send_json_error('Invalid taxonomy');
+        }
+        
+        $terms = get_terms([
+            'taxonomy' => $taxonomy,
+            'hide_empty' => false,
+        ]);
+        
+        if (is_wp_error($terms)) {
+            wp_send_json_error($terms->get_error_message());
+        }
+        
+        $terms_array = [];
+        foreach ($terms as $term) {
+            $terms_array[$term->term_id] = $term->name;
+        }
+
+        wp_send_json_success($terms_array);
+    }
+
+    public static function handle_search_users()
+    {
+        check_ajax_referer('hooshina_ai_nonce', 'nonce');
+
+        $search = sanitize_text_field(wp_unslash($_GET['search'] ?? ''));
+        $page = absint($_GET['page'] ?? 1);
+        $per_page = 20;
+
+        $args = [
+            'search' => "*{$search}*",
+            'search_columns' => ['user_login', 'user_nicename', 'display_name'],
+            'role__in' => ['administrator', 'editor', 'author'],
+            'number' => $per_page,
+            'paged' => $page,
+            'orderby' => 'display_name',
+            'order' => 'ASC'
+        ];
+
+        $user_query = new \WP_User_Query($args);
+        $users = $user_query->get_results();
+        $total = $user_query->get_total();
+
+        $items = [];
+        foreach ($users as $user) {
+            $items[] = [
+                'id' => $user->ID,
+                'text' => $user->display_name,
+                'role' => wp_roles()->get_names()[$user->roles[0]]
+            ];
+        }
+
+        wp_send_json_success([
+            'items' => $items,
+            'more' => ($page * $per_page) < $total
+        ]);
+    }
+
+    public static function handle_dismiss_remind_notice()
+    {
+        check_ajax_referer('hooshina_ai_nonce', 'nonce');
+
+        $expirationTime = 3 * DAY_IN_SECONDS;
+        $domain = parse_url(get_option('siteurl'), PHP_URL_HOST);
+        $cookie = setcookie('hai_dismiss_connection_notice_status', '1', time() + $expirationTime, '/', $domain, false, true);
+
+        wp_send_json_success([
+            'cookie' => $cookie,
+            'success' => true
+        ]);
+    }
 }

@@ -229,7 +229,7 @@ html[dir=rtl] .edit-post-visual-editor__post-title-wrapper .hai-button-portal {
     width: 20%;
     padding: 6px 17px;
     border-radius: 10px;
-    border: none;
+    border: 1px solid #ebebeb;
 }
 
 .hai-options-foot {
@@ -246,6 +246,14 @@ html[dir=rtl] .edit-post-visual-editor__post-title-wrapper .hai-button-portal {
     border-radius: 10px;
     transition: ease .15s;
     cursor: pointer;
+}
+
+.hai-options-foot .hai-submit[disabled],
+.hai-no-connection-notice .close-remind-notice.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    filter: grayscale(1);
 }
 
 .hai-options-foot .hai-submit:hover {
@@ -298,4 +306,246 @@ button.MuiButton-root.Mui-disabled {
 
 .edit-post-header .editor-header__center .hai-button-wrap {
     margin: 0 10px;
+}
+
+.hai-subtabs {
+    margin: 0 25px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.hai-subtabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.hai-subtabs li {
+    margin: 0;
+    padding: 0;
+}
+
+.hai-subtabs a {
+    display: block;
+    padding: 15px 0;
+    color: #595959;
+    text-decoration: none;
+    font-size: 15px;
+    position: relative;
+    box-shadow: none;
+    outline: 0;
+}
+
+.hai-subtabs li.active a {
+    color: var(--hai-primary-color);
+    font-weight: 500;
+}
+
+.hai-subtabs li.active a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--hai-primary-color);
+}
+
+.hai-des {
+    margin-top: 7px;
+    font-size: 14px;
+    color: #7e7e7e;
+}
+
+.hai-form-field select.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23999" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/></path></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+.ltr .hai-form-field select.loading {
+    background-position: left 8px center;
+    padding-right: 0;
+    padding-left: 30px;
+}
+
+.select2-container {
+    width: 20% !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: auto;
+    padding: 3px;
+    border-radius: 10px;
+    border-color: #ebebeb;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 36px;
+    padding-left: 17px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 25px;
+}
+
+.hai-author-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.hai-author-option .hai-author-role {
+    font-size: 12px;
+    color: #666;
+    background: #f5f5f5;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #333;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 8px 12px;
+}
+
+html[dir="rtl"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-right: 15px;
+    padding-left: 30px;
+}
+
+html[dir="rtl"] .select2-container--default .select2-selection--single .select2-selection__arrow {
+    left: 7px;
+    right: auto;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 11px;
+}
+
+.nocontent-field-placeholder div {
+    max-width: 260px;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    gap: 10px;
+    justify-content: space-between;
+    border: 1px solid #dd9e5c;
+    padding: 8px 11px;
+    border-radius: 7px;
+    background-color: #ffead1;
+    color: #482200;
+}
+
+.nocontent-field-placeholder div span {
+    display: flex;
+    align-items: center;
+}
+
+.hai-no-connection-notice {
+    padding: 20px 20px 20px 30px;
+    border-radius: 27px;
+    font-size: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    color: black;
+    background: linear-gradient(45deg, #f3f5fd, #fdc39b96);
+    border: 2px solid #fff;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hai-no-connection-notice .notice-text {
+    flex: auto;
+}
+
+.hai-no-connection-notice .border-line {
+    position: absolute;
+    width: 5px;
+    height: 75%;
+    background-color: #f8802e;
+    border-radius: 20px;
+    right: 0;
+}
+
+.ltr .hai-no-connection-notice .border-line {
+    right: auto;
+    left: 0;
+}
+
+.hai-no-connection-notice .connect-btn {
+    display: block; 
+    text-decoration: none; 
+    padding: 15px 25px; 
+    border-radius: 14px; 
+    box-shadow: none; 
+    background-color: #ffc33a; 
+    color: black
+}
+
+.hai-no-connection-notice img {
+    width: 100px;
+}
+
+.hai-no-connection-notice .close-remind-notice {
+    box-shadow: none; 
+    outline: 0;
+    color: black; 
+    text-decoration: none; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    font-size: 16px;
+}
+
+@media screen and (max-width: 1024px) {
+    .hai-admin-wrap {
+        display: block;
+    }
+
+    .hai-admin-wrap .hai-admin-head {
+        justify-content: center;
+    }
+
+    .hai-admin-wrap div:is(.hai-admin-sidebar, .hai-admin-options-wrap) {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hai-no-connection-notice {
+        flex-wrap: wrap;
+        text-align: center;
+        justify-content: center;
+        gap: 15px;
+        font-size: 16px;
+    }
+
+    .hai-no-connection-notice .border-line {
+        right: auto;
+        top: 0;
+        left: auto;
+        height: 7px;
+        width: 75%;
+    }
+
+    .hai-no-connection-notice .notice-text {
+        font-weight: 500;
+    }
 }

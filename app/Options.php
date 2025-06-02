@@ -27,4 +27,10 @@ class Options
     {
         return Helper::get_locale();
     }
+
+    public static function hideRemindNotice()
+    {
+        $cookieKey = 'hai_dismiss_connection_notice_status';
+        return isset($_COOKIE[$cookieKey]) && $_COOKIE[$cookieKey] == 1;
+    }
 }
