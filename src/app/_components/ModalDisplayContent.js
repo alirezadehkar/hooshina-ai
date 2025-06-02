@@ -62,6 +62,7 @@ const DataDisplay = ({
 
     useEffect(() => {
         let subject = '';
+        let editorContent = '';
 
         const textBlocks = ["core/paragraph", "core/heading", "core/quote", "core/list"];
             
@@ -93,14 +94,16 @@ const DataDisplay = ({
                     .trim();
                 
                 if (textContent) {
-                    subject += textContent;
+                    editorContent += textContent;
                 }
             } else {
                 const classicContent = document.getElementById('content');
                 if (classicContent) {
-                    subject += classicContent.value.trim();
+                    editorContent += classicContent.value.trim();
                 }
             }
+
+            subject += subject ? "\n" + editorContent : editorContent;
         }
 
         if(subject){
@@ -174,7 +177,7 @@ const DataDisplay = ({
     
         try {
             const response = await makeRequest(hai_data.ajax_url, baseData);
-    
+            console.log(response.data);
             if (response.data.success) {
                 const data = response?.data?.data?.content || null;
 

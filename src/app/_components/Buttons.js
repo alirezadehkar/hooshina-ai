@@ -5,7 +5,7 @@ import { useSelect } from '@wordpress/data';
 import { createHigherOrderComponent } from '@wordpress/compose';
 
 import { Button as WpButton, ToolbarGroup, ToolbarButton } from '@wordpress/components';
-import { Button as MuiButton, ThemeProvider } from '@mui/material';
+import { Button as MuiButton, ThemeProvider, Tooltip } from '@mui/material';
 
 import { useMutationObserver, CustomTheme, buttonActionTypes, HooshinaIcon } from '../Helpers';
 import { OpenGeneratorModal } from './GeneratorModal';
@@ -51,7 +51,8 @@ export const ButtonsInitialize = () => {
         isTextButton = false,
         action = null,
         position = null,
-        delay = null
+        delay = null,
+        helperText = null
     }) => {
         type = !type ? 'text' : type;
         let priClassName = `hai-button-wrap hai-${type}-type-button-wrap`;
@@ -68,27 +69,35 @@ export const ButtonsInitialize = () => {
     
         const buttonElement = isTextButton ? (
             <div className={'hai-text-button-wrap ' + className}>
-                <MuiButton
-                    href="#"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        handleButtonOnClick(e);
-                    }}
-                    startIcon={<HooshinaIcon />}
-                >
-                    {text || hai_data.texts.text_button}
-                </MuiButton>
+                <Tooltip title={helperText || ""} placement="top">
+                    <MuiButton
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleButtonOnClick(e);
+                        }}
+                        startIcon={<HooshinaIcon />}
+                        data-type={type}
+                        data-action={action}
+                    >
+                        {text || hai_data.texts.text_button}
+                    </MuiButton>
+                </Tooltip>
             </div>
         ) : (
             <div className={'hai-large-button-wrap ' + className}>
-                <MuiButton
-                    color="primary"
-                    className="button button-primary button-large"
-                    onClick={(e) => handleButtonOnClick(e)}
-                    startIcon={<HooshinaIcon />}
-                >
-                    {text || hai_data.texts.text_button}
-                </MuiButton>
+                <Tooltip title={helperText || ""} placement="top">
+                    <MuiButton
+                        color="primary"
+                        className="button button-primary button-large"
+                        onClick={(e) => handleButtonOnClick(e)}
+                        startIcon={<HooshinaIcon />}
+                        data-type={type}
+                        data-action={action}
+                    >
+                        {text || hai_data.texts.text_button}
+                    </MuiButton>
+                </Tooltip>
             </div>
         );
     
@@ -131,7 +140,7 @@ export const ButtonsInitialize = () => {
         return Container.map(renderPortal).filter(Boolean);
     };
 
-    const LargeButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null }) => {
+    const LargeButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null, helperText = null }) => {
         const containers = useMutationObserver(selector, insideIframe, iframeSelector);
         return useMemo(() => createPortalButton({
             Container: containers, 
@@ -143,11 +152,12 @@ export const ButtonsInitialize = () => {
             position: position,
             delay: delay,
             insideIframe: insideIframe,
-            iframeSelector: iframeSelector
+            iframeSelector: iframeSelector,
+            helperText: helperText
         }), [containers, text, onClick, type, className, action, position, delay, insideIframe, iframeSelector]);
     };
     
-    const TextButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null }) => {
+    const TextButton = ({ selector, text, onClick, type = null, className= null, action = null, position = null, delay = null, insideIframe = null, iframeSelector = null, helperText = null }) => {
         const containers = useMutationObserver(selector, insideIframe, iframeSelector);
         return useMemo(() => createPortalButton({
             Container: containers, 
@@ -160,7 +170,8 @@ export const ButtonsInitialize = () => {
             position: position,
             delay: delay,
             insideIframe: insideIframe,
-            iframeSelector: iframeSelector
+            iframeSelector: iframeSelector,
+            helperText: helperText
         }), [containers, text, onClick, type, className, action, position, delay, insideIframe, iframeSelector]);
     };
 
@@ -221,14 +232,15 @@ export const ButtonsInitialize = () => {
             position: 'after',
             type: "text",
             isTextButton: true,
-            action: buttonActionTypes.postSeoTitle
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: ".rank-math-description-variables",
             text: hai_data.texts.description_generate,
             isTextButton: true,
             type: "text",
-            action: buttonActionTypes.postSeoDescription
+            action: buttonActionTypes.postSeoDescription,
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: ".rank-math-tabs .below-focus-keyword, .block-editor-page .rank-math-tab-content-general .rank-math-focus-keyword",
@@ -236,7 +248,8 @@ export const ButtonsInitialize = () => {
             position: 'after',
             isTextButton: true,
             type: "text",
-            action: buttonActionTypes.postSeoKeyword
+            action: buttonActionTypes.postSeoKeyword,
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: "#focus-keyword-input-metabox",
@@ -244,7 +257,8 @@ export const ButtonsInitialize = () => {
             position: 'after',
             isTextButton: true,
             type: "text",
-            action: buttonActionTypes.postSeoKeyword
+            action: buttonActionTypes.postSeoKeyword,
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: ".yst-replacevar__buttons button[id*='title-metabox']",
@@ -252,7 +266,8 @@ export const ButtonsInitialize = () => {
             position: 'after',
             isTextButton: true,
             type: "text",
-            action: buttonActionTypes.postSeoTitle
+            action: buttonActionTypes.postSeoTitle,
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: ".yst-replacevar__buttons button[id*='description-metabox']",
@@ -260,7 +275,8 @@ export const ButtonsInitialize = () => {
             position: 'after',
             isTextButton: true,
             type: "text",
-            action: buttonActionTypes.postSeoDescription
+            action: buttonActionTypes.postSeoDescription,
+            helperText: hai_data.texts.seo_helper
         },
         {
             selector: ".editor-post-featured-image",

@@ -48,6 +48,7 @@
     border-radius: 7px;
     text-decoration: none;
     height: 40px;
+    max-width: 320px;
 }
 
 .MuiBox-root .MuiFormControlLabel-root {
@@ -511,6 +512,12 @@ html[dir="rtl"] .select2-container--default .select2-selection--single .select2-
     padding: 10px 20px; 
     cursor: pointer; 
     font-size: 16px;
+}
+
+:is(.rank-math-editor-general, .rank-math-tab-content-general) .hai-button-wrap {
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding: 5px;
 }
 
 @media screen and (max-width: 1024px) {

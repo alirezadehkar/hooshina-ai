@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Hooshina Ai\n"
-"POT-Creation-Date: 2025-06-02 08:07+0330\n"
-"PO-Revision-Date: 2025-06-02 08:08+0330\n"
+"POT-Creation-Date: 2025-06-02 11:03+0330\n"
+"PO-Revision-Date: 2025-06-02 11:03+0330\n"
 "Last-Translator: \n"
 "Language-Team: Hooshina Team (support@hooshina.com)\n"
 "Language: fa_IR\n"
@@ -288,6 +288,12 @@ msgstr "موجودی حساب شما کافی نیست"
 msgid "To use Hooshina services, you must top up your account."
 msgstr "برای استفاده از سرویس های هوشینا باید حساب خود را شارژ کنید."
 
+#: app/Assets.php:162
+msgid ""
+"Before entering SEO information, be sure to complete the post title and "
+"content."
+msgstr "قبل از وارد کردن اطلاعات سئو، حتماً عنوان و محتوای پست را تکمیل کنید."
+
 #: app/Callback.php:36
 msgid "Product reviews summary"
 msgstr "خلاصه نظرات محصول"
@@ -322,7 +328,7 @@ msgstr "کلید دسترسی الزامیست."
 
 #: app/api/middleware/ApiKeyMiddleware.php:22
 msgid "Invalid API key."
-msgstr "کلید دسترسی نامعتبر است"
+msgstr "کلید دسترسی نامعتبر است."
 
 #: app/api/post/CreatePost.php:191
 msgid "Content field is required"
@@ -851,6 +857,11 @@ msgstr "تولید هوشمند تصویر و متن به کمک هوش مصنو
 #. Author URI of the plugin/theme
 msgid "https://Hooshina.com"
 msgstr ""
+
+#~ msgid ""
+#~ "Be sure to complete the title and content before completing the SEO "
+#~ "information."
+#~ msgstr "قبل از تکمیل اطلاعات سئو، حتما عنوان و محتوا را تکمیل کنید."
 
 #~ msgid ""
 #~ "Number of useful comments (minimum: %d) is not suitable for producing a "

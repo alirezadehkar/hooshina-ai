@@ -159,6 +159,7 @@ class Assets {
                 ],
                 'insufficient_balance' => __('Your account balance is insufficient', 'hooshina-ai'),
                 'insufficient_balance_description'=> __('To use Hooshina services, you must top up your account.', 'hooshina-ai'),
+                'seo_helper' => __('Before entering SEO information, be sure to complete the post title and content.', 'hooshina-ai')
             ]
         );
 
