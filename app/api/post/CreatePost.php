@@ -3,6 +3,7 @@
 namespace HooshinaAi\App\Api\Post;
 
 use HooshinaAi\App\Api\BaseApi;
+use HooshinaAi\App\Settings;
 use HooshinaAi\App\Uploader;
 use Parsedown;
 
@@ -146,16 +147,32 @@ class CreatePost extends BaseApi
 
     private function create_post($content, $featured_id = null) 
     {
+        $defPostType = Settings::get_default_post_type();
+        $defPostStatus = Settings::get_default_post_status();
+        $defAuthor = Settings::get_default_author();
+        $defTaxonomy = Settings::get_default_taxonomy();
+        $defCategory = Settings::get_default_category();
+
         $post_data = [
             'post_content' => $content,
-            'post_status' => 'draft',
-            'post_type' => 'post',
+            'post_status' => $defPostStatus ?: 'draft',
+            'post_type' => $defPostType ?: 'post',
         ];
+
+        if ($defAuthor) {
+            $post_data['post_author'] = $defAuthor;
+        }
 
         $post_id = wp_insert_post($post_data);
 
-        if (!is_wp_error($post_id) && $featured_id) {
-            set_post_thumbnail($post_id, $featured_id);
+        if (!is_wp_error($post_id)) {
+            if ($featured_id) {
+                set_post_thumbnail($post_id, $featured_id);
+            }
+
+            if ($defTaxonomy && $defCategory) {
+                wp_set_object_terms($post_id, $defCategory, $defTaxonomy);
+            }
         }
 
         return $post_id;
