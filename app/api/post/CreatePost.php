@@ -78,6 +78,10 @@ class CreatePost extends BaseApi
                     'callback' => [$this, 'handle_request'],
                     'permission_callback' => [$this->middleware, 'handle_validate_api_key'],
                     'args' => [
+                        'title' => [
+                            'required' => true,
+                            'type' => 'string',
+                        ],
                         'content' => [
                             'required' => true,
                             'type' => 'string',
@@ -91,7 +95,7 @@ class CreatePost extends BaseApi
                             'required' => false,
                             'type' => 'object',
                         ],
-                        'featured_image_temp_id' => [
+                        'featured_image_id' => [
                             'required' => false,
                             'type' => 'string',
                         ],
@@ -145,7 +149,7 @@ class CreatePost extends BaseApi
         return $this->parsedown->text($content);
     }
 
-    private function create_post($content, $featured_id = null) 
+    private function create_post($title, $content, $featured_id = null) 
     {
         $defPostType = Settings::get_default_post_type();
         $defPostStatus = Settings::get_default_post_status();
@@ -154,6 +158,7 @@ class CreatePost extends BaseApi
         $defCategory = Settings::get_default_category();
 
         $post_data = [
+            'post_title' => $title,
             'post_content' => $content,
             'post_status' => $defPostStatus ?: 'draft',
             'post_type' => $defPostType ?: 'post',
@@ -199,11 +204,11 @@ class CreatePost extends BaseApi
             $html_content = $this->convert_markdown_to_html($content);
             
             $featured_id = null;
-            if (isset($params['featured_image_temp_id']) && isset($processed_images[$params['featured_image_temp_id']])) {
-                $featured_id = $processed_images[$params['featured_image_temp_id']]['id'];
+            if (isset($params['featured_image_id']) && isset($processed_images[$params['featured_image_id']])) {
+                $featured_id = $processed_images[$params['featured_image_id']]['id'];
             }
             
-            $post_id = $this->create_post($html_content, $featured_id);
+            $post_id = $this->create_post($params['title'], $html_content, $featured_id);
             
             if (is_wp_error($post_id)) {
                 return $this->create_response([
