@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Hooshina Ai\n"
-"POT-Creation-Date: 2025-06-02 05:55+0330\n"
-"PO-Revision-Date: 2025-06-02 05:56+0330\n"
+"POT-Creation-Date: 2025-06-02 08:07+0330\n"
+"PO-Revision-Date: 2025-06-02 08:08+0330\n"
 "Last-Translator: \n"
 "Language-Team: Hooshina Team (support@hooshina.com)\n"
 "Language: fa_IR\n"
@@ -279,6 +279,14 @@ msgstr "هیچ نتیجه‌ای یافت نشد"
 #: app/Assets.php:158
 msgid "Searching..."
 msgstr "در حال جستجو..."
+
+#: app/Assets.php:160
+msgid "Your account balance is insufficient"
+msgstr "موجودی حساب شما کافی نیست"
+
+#: app/Assets.php:161
+msgid "To use Hooshina services, you must top up your account."
+msgstr "برای استفاده از سرویس های هوشینا باید حساب خود را شارژ کنید."
 
 #: app/Callback.php:36
 msgid "Product reviews summary"
