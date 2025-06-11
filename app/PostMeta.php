@@ -27,4 +27,9 @@ class PostMeta
     {
         return self::update_meta($post_id, 'hooshina_ai_product_reviews_summary', $summary);
     }
+
+    public static function get_filter_meta_key()
+    {
+        return 'by_hooshina';
+    }
 }

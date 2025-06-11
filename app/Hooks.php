@@ -31,6 +31,9 @@ class Hooks
             add_action('admin_init', ['\HooshinaAi\App\Callback', 'handle_connection_notices']);
 
             add_action('wp_ajax_hai_dismiss_remind_notice', ['\HooshinaAi\App\Ajax', 'handle_dismiss_remind_notice']);
+
+            add_action('pre_get_posts', ['\HooshinaAi\App\Callback', 'handle_posts_filter_query']);
+            add_filter('views_edit-post', ['\HooshinaAi\App\Callback', 'handle_post_status_statuses_filter']);
         } else {
             add_action('comment_form_before', ['\HooshinaAi\App\Callback', 'handle_show_ai_reviews_excerpt']);
         }

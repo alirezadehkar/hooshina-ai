@@ -3,6 +3,7 @@
 namespace HooshinaAi\App\Api\Routes;
 
 use HooshinaAi\App\Api\BaseApi;
+use HooshinaAi\App\PostMeta;
 use HooshinaAi\App\PostSeoData;
 use HooshinaAi\App\Settings;
 use HooshinaAi\App\Uploader;
@@ -149,13 +150,15 @@ class CreatePostApi extends BaseApi
         $post_id = wp_insert_post($post_data);
 
         if (!is_wp_error($post_id)) {
+            add_post_meta($post_id, PostMeta::get_filter_meta_key(), 1);
+
             if ($featured_id) {
                 set_post_thumbnail($post_id, $featured_id);
             }
 
             if ($term && !is_wp_error($term)) {
                 wp_set_object_terms($post_id, $term->term_id, $defTaxonomy);
-            }            
+            }    
         } else {
             return false;
         }

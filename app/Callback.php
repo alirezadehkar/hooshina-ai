@@ -72,4 +72,50 @@ class Callback
             }, 1);
         }
     }
+
+    public static function handle_posts_filter_query($query)
+    {
+        global $pagenow;
+        $key = PostMeta::get_filter_meta_key();
+
+        if (is_admin() && $pagenow === 'edit.php' && isset($_GET[$key]) && $_GET[$key] === '1') {
+            $query->set('meta_key', $key);
+            $query->set('meta_value', '1');
+        }
+    }
+
+    public static function handle_post_status_statuses_filter($statuses)
+    {
+        global $wpdb;
+        $key = PostMeta::get_filter_meta_key();
+        
+        $count = $wpdb->get_var(sprintf("
+            SELECT COUNT(*) 
+            FROM {$wpdb->posts} p 
+            INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id 
+            WHERE pm.meta_key = '%s' 
+            AND pm.meta_value = '1'
+        ", $key));
+
+        $class = isset($_GET[$key]) && $_GET[$key] === '1' ? 'current' : '';
+        
+        $url = remove_query_arg(array_keys($_GET));
+
+        $post_type = !empty($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : get_post_type();
+
+        $url = add_query_arg([
+            'post_type' => $post_type,
+            $key => '1'
+        ], $url);
+        
+        $statuses['hooshina'] = sprintf(
+            '<a href="%s" class="hooshina-posts-filter-btn %s">%s <span class="count">(%d)</span></a>',
+            esc_url($url),
+            $class,
+            esc_html__('Hooshina', 'hooshina-ai'),
+            $count
+        );
+
+        return $statuses;
+    }
 }
