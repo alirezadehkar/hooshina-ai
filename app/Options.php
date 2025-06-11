@@ -33,4 +33,15 @@ class Options
         $cookieKey = 'hai_dismiss_connection_notice_status';
         return isset($_COOKIE[$cookieKey]) && $_COOKIE[$cookieKey] == 1;
     }
+
+    public static function is_rank_math_active()
+    {
+        return class_exists('\RankMath') || 
+               (function_exists('is_plugin_active') && is_plugin_active('seo-by-rank-math/rank-math.php'));
+    }
+
+    public static function is_yoast_seo_active()
+    {
+        return function_exists('is_plugin_active') && is_plugin_active('wordpress-seo/wp-seo.php');
+    }
 }

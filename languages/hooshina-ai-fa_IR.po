@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Hooshina Ai\n"
-"POT-Creation-Date: 2025-06-02 11:03+0330\n"
-"PO-Revision-Date: 2025-06-02 11:03+0330\n"
+"POT-Creation-Date: 2025-06-09 17:25+0330\n"
+"PO-Revision-Date: 2025-06-09 17:25+0330\n"
 "Last-Translator: \n"
 "Language-Team: Hooshina Team (support@hooshina.com)\n"
 "Language: fa_IR\n"
@@ -111,7 +111,7 @@ msgstr "با هوشینا Ai چند قدم جلوتر از بقیه باشید."
 msgid "You can intelligently generate text and images."
 msgstr "شما می توانید به صورت هوشمند متن و تصویر تولید کنید."
 
-#: app/Assets.php:116 app/Settings.php:164
+#: app/Assets.php:116 app/Settings.php:177
 msgid "Connect to Hooshina"
 msgstr "اتصال به هوشینا"
 
@@ -245,7 +245,7 @@ msgstr "تولید خلاصه نظرات مشتریان با هوشینا Ai"
 msgid "Image replace with Hooshina Ai"
 msgstr "جایگزینی تصویر با هوشینا Ai"
 
-#: app/Assets.php:150 app/Helper.php:163
+#: app/Assets.php:150 app/Fields.php:87
 msgid "Select..."
 msgstr "انتخاب..."
 
@@ -314,13 +314,29 @@ msgstr "فعالسازی هوشینا"
 msgid "Remind later"
 msgstr "بعدا یادآوری کن"
 
-#: app/Settings.php:57
+#: app/Settings.php:59
 msgid "Settings saved successfully."
 msgstr "ذخیره تغییرات باموفقیت انجام شد."
 
-#: app/Settings.php:161
-msgid "Settings"
-msgstr "تنظیمات"
+#: app/Settings.php:169
+msgid "Content Generator Settings"
+msgstr "تنظیمات تولید محتوا"
+
+#: app/Settings.php:172
+msgid "Auto Content Generator"
+msgstr "تولید محتوای خودکار"
+
+#: app/Settings.php:173
+msgid "Deactivated"
+msgstr "غیرفعال شده"
+
+#: app/Settings.php:173
+msgid "Activated"
+msgstr "فعال شده"
+
+#: app/Settings.php:178
+msgid "Connected"
+msgstr "متصل شده"
 
 #: app/api/middleware/ApiKeyMiddleware.php:14
 msgid "API key is required."
@@ -330,11 +346,11 @@ msgstr "کلید دسترسی الزامیست."
 msgid "Invalid API key."
 msgstr "کلید دسترسی نامعتبر است."
 
-#: app/api/post/CreatePost.php:191
+#: app/api/routes/CreatePostApi.php:185
 msgid "Content field is required"
 msgstr "فیلد content الزامیست"
 
-#: app/api/post/CreatePost.php:217
+#: app/api/routes/CreatePostApi.php:239
 msgid "Content created successfully"
 msgstr "ایجاد محتوا باموفقیت انجام شد"
 
@@ -347,7 +363,7 @@ msgid "Image"
 msgstr "تصویر"
 
 #. translators: %s is the minimum php version
-#: core.php:139
+#: core.php:149
 #, php-format
 msgid ""
 "We detect your server php version is to old, this plugin need php version "
@@ -356,9 +372,21 @@ msgstr ""
 "ما تشخیص دادیم که نسخه php سرور شما قدیمی است، این افزونه به نسخه php %s "
 "نیاز دارد. لطفاً برای به روز رسانی php با سرویس میزبان خود تماس بگیرید"
 
-#: core.php:144
+#: core.php:154
 msgid "Hooshina Plugin:"
 msgstr "افزونه هوشینا:"
+
+#: core.php:162
+msgid "External URL access is blocked by WordPress configuration"
+msgstr "دسترسی به آدرس‌ های خارجی توسط وردپرس مسدود شده است"
+
+#: core.php:163
+msgid ""
+"To fix this, please add app.hooshina.com to the list of allowed hosts in "
+"your wp-config.php file."
+msgstr ""
+"برای رفع این محدودیت، لطفاً دامنه app.hooshina.com را به لیست آدرس‌ های مجاز "
+"در فایل wp-config.php اضافه کنید."
 
 #: node_modules/@wordpress/block-library/src/archives/index.php:30
 msgid "Archives"
@@ -760,39 +788,66 @@ msgstr "فعالسازی هوشینا Ai"
 msgid "Account Balance"
 msgstr "موجودی حساب"
 
-#: views/admin/pages/general-tab.php:8
-msgid "Content Generation"
-msgstr "تولید محتوا"
+#: views/admin/pages/auto-content-generator-tab.php:9
+msgid "Hooshina API Successfully Activated"
+msgstr "API هوشینا باموفقیت فعال شد"
 
-#: views/admin/pages/general-tab.php:13
-msgid "Automatic Content Generation"
-msgstr "تولید محتوای خودکار"
+#: views/admin/pages/auto-content-generator-tab.php:11
+msgid "Currently, this connection is only used for the following two purposes:"
+msgstr "در حال حاضر، این ارتباط فقط برای دو کاربرد مشخص فعال است:"
 
-#: views/admin/pages/general-tab.php:26
-msgid "Default Content Tone"
-msgstr "لحن محتوای پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:13
+msgid "Automatically publishing content from Hooshina to your website"
+msgstr "انتشار خودکار محتوا از سرویس هوشینا بر روی سایت شما"
 
-#: views/admin/pages/general-tab.php:35
-msgid "Default Image Style"
-msgstr "استایل تصویر پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:14
+msgid "Retrieving your WordPress categories to align content structure"
+msgstr "دریافت لیست دسته ‌بندی ‌های وردپرس جهت تطابق ساختار محتوایی"
 
-#: views/admin/pages/general-tab.php:44
-msgid "Default Product Style"
-msgstr "استایل محصول پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:16
+msgid ""
+"This communication is performed via a dedicated, secure API and does not "
+"grant any additional access to your site."
+msgstr ""
+"این ارتباط از طریق API اختصاصی و به‌صورت کاملاً ایمن انجام می‌شود و هیچگونه "
+"دسترسی اضافی به سایت شما ندارد."
 
-#: views/admin/pages/general-tab.php:53
-msgid "Default Image Size"
-msgstr "سایز تصویر پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:17
+msgid ""
+"You can rest assured that no actions beyond the two listed above will be "
+"performed."
+msgstr ""
+"اطمینان داشته باشید که هیچ عملیات دیگری خارج از موارد فوق انجام نخواهد شد."
 
-#: views/admin/pages/general-tab.php:72
-msgid "Default Post Type"
-msgstr "نوع پست پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:18
+msgid ""
+"If any changes occur in access levels or API functionality, you will be "
+"notified through official plugin updates."
+msgstr ""
+"در صورت تغییر در نوع دسترسی یا عملکرد API، از طریق بروزرسانی های رسمی به شما "
+"اطلاع ‌رسانی خواهد شد."
 
-#: views/admin/pages/general-tab.php:82
-msgid "Default Post Status"
-msgstr "وضعیت پست پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:23
+msgid "Hooshina API Deactivated"
+msgstr "API هوشینا غیرفعال شده"
 
-#: views/admin/pages/general-tab.php:86
+#: views/admin/pages/auto-content-generator-tab.php:24
+msgid ""
+"Automatic content publishing will not occur and Hooshina access to your site "
+"is currently blocked."
+msgstr ""
+"انتشار خودکار محتوا انجام نمی‌ شود و دسترسی‌ های هوشینا به سایت شما در حال "
+"حاضر مسدود شده است."
+
+#: views/admin/pages/auto-content-generator-tab.php:32
+msgid "Deactivation Hooshina API"
+msgstr "غیرفعالسازی API هوشینا"
+
+#: views/admin/pages/auto-content-generator-tab.php:41
+msgid "Post Status"
+msgstr "وضعیت پست"
+
+#: views/admin/pages/auto-content-generator-tab.php:45
 msgid ""
 "It is recommended to set the status to draft and publish posts after "
 "thorough review and making the desired changes."
@@ -800,37 +855,46 @@ msgstr ""
 "پیشنهاد می شود وضعیت را روی پیش نویس تنظیم و پست ها را پس از بررسی کامل و "
 "انجام تغییرات مورد نظر منتشر کنید."
 
-#: views/admin/pages/general-tab.php:94
-msgid "Default Author"
-msgstr "نویسنده پیشفرض"
+#: views/admin/pages/auto-content-generator-tab.php:53
+msgid "Post Author"
+msgstr "نویسنده پست"
 
-#: views/admin/pages/general-tab.php:120
-msgid "Default Taxonomy"
-msgstr "طبقه بندی پیشفرض"
-
-#: views/admin/pages/general-tab.php:124
-msgid "To select a category, you must first select the desired taxonomy."
-msgstr "برای انتخاب دسته بندی باید طبقه بندی موردنظر را انتخاب کنید."
-
-#: views/admin/pages/general-tab.php:137
-msgid "Default Category"
-msgstr "دسته بندی پیشفرض"
-
-#: views/admin/pages/general-tab.php:145
+#: views/admin/pages/auto-content-generator-tab.php:69
+#: views/admin/pages/content-generator-tab.php:53
 msgid "Save Changes"
 msgstr "ذخیره تغییرات"
+
+#: views/admin/pages/content-generator-tab.php:10
+msgid "Default Content Tone"
+msgstr "لحن پیشفرض محتوا"
+
+#: views/admin/pages/content-generator-tab.php:19
+msgid "Default Content Lang"
+msgstr "زبان پیشفرض محتوا"
+
+#: views/admin/pages/content-generator-tab.php:28
+msgid "Default Image Style"
+msgstr "استایل پیشفرض تصویر"
+
+#: views/admin/pages/content-generator-tab.php:37
+msgid "Default Product Image Style"
+msgstr "استایل پیشفرض تصویر محصول"
+
+#: views/admin/pages/content-generator-tab.php:46
+msgid "Default Image Size"
+msgstr "سایز پیشفرض تصویر"
 
 #: views/admin/pages/options.php:10
 msgid "Welcome to Hooshina Ai"
 msgstr "به هوشینا Ai خوش آمدید"
 
-#: views/admin/pages/options.php:29
+#: views/admin/pages/options.php:37
 msgid "To use all the features of Hoshina Ai, please activate the plugin."
 msgstr ""
 "برای استفاده از تمام قابلیت های هوشینا Ai لطفا نسبت به فعالسازی افزونه اقدام "
 "کنید."
 
-#: views/admin/pages/options.php:29
+#: views/admin/pages/options.php:37
 msgid "Lets Go"
 msgstr "بزن بریم"
 
@@ -857,6 +921,24 @@ msgstr "تولید هوشمند تصویر و متن به کمک هوش مصنو
 #. Author URI of the plugin/theme
 msgid "https://Hooshina.com"
 msgstr ""
+
+#~ msgid "Default Post Type"
+#~ msgstr "نوع پست پیشفرض"
+
+#~ msgid "Hooshina API Status"
+#~ msgstr "وضعیت API هوشینا"
+
+#~ msgid "Settings"
+#~ msgstr "تنظیمات"
+
+#~ msgid "Default Taxonomy"
+#~ msgstr "طبقه بندی پیشفرض"
+
+#~ msgid "To select a category, you must first select the desired taxonomy."
+#~ msgstr "برای انتخاب دسته بندی باید طبقه بندی موردنظر را انتخاب کنید."
+
+#~ msgid "Default Category"
+#~ msgstr "دسته بندی پیشفرض"
 
 #~ msgid ""
 #~ "Be sure to complete the title and content before completing the SEO "

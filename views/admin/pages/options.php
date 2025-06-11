@@ -14,8 +14,16 @@
                             <?php foreach(HooshinaAi\App\Settings::get_menu_items() as $key => $item): ?>
                                 <li class="<?php echo HooshinaAi\App\Settings::get_current_tab() == $key ? 'active' : '' ?>">
                                     <a href="<?php echo esc_attr(add_query_arg('tab', esc_attr($key), remove_query_arg('subtab'))) ?>">
-                                        <span class="hai-tab-icon hai-tab-<?php echo esc_attr($key) ?>-icon"></span>
+                                        <?php if(!empty($item['icon'])): ?>
+                                            <span class="hai-tab-icon hai-tab-<?php echo esc_attr($key) ?>-icon"></span>
+                                        <?php endif; ?>
                                         <?php echo esc_html($item['title']) ?>
+
+                                        <?php 
+                                            if(!empty($item['badge'])):
+                                                echo sprintf('<span class="hai-tab-item-badge %s">%s</span>', esc_attr($item['badge_classes'] ?? ''), esc_html($item['badge']));
+                                            endif; 
+                                        ?>
                                     </a>
                                 </li>
                             <?php endforeach; ?>

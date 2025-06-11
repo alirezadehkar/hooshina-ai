@@ -61,7 +61,7 @@ class HaiClient
     
             return json_decode(wp_remote_retrieve_body($response), true);
         } catch(\Throwable $th){
-            Logger::debug($th->getMessage());
+            Logger::error($th);
             return false;
         }
     }

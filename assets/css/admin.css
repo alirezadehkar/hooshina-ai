@@ -208,10 +208,27 @@ html[dir=rtl] .edit-post-visual-editor__post-title-wrapper .hai-button-portal {
     left: 10px;
 }
 
-
 .hai-ltr .hai-admin-tabs li.active::after {
     left: auto;
     right: 10px;
+}
+
+.hai-tab-item-badge {
+    font-size: 12px;
+    background-color: #f0f0f0;
+    color: #3e3e3e;
+    padding: 2px 7px;
+    border-radius: 7px;
+}
+
+.hai-tab-item-badge.is-activated {
+    background-color: #18935a;
+    color: #ffffff;
+}
+
+.hai-tab-item-badge.is-deactivated {
+    background-color: #931818;
+    color: #ffffff;
 }
 
 .hai-form-fields-group .hai-option-field-wrap:nth-of-type(2n-1) {
@@ -518,6 +535,197 @@ html[dir="rtl"] .select2-container--default .select2-selection--single .select2-
     margin-top: 0;
     margin-bottom: 5px;
     padding: 5px;
+}
+
+.hai-notice-wrap {
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.hai-admin-notice-wrap .hai-notice-wrap {
+    padding: 0;
+}
+
+.hai-notice {
+    position: relative;
+    background-color: #dafaff;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #00638b;
+}
+
+.hai-notice .hai-dismiss-notice {
+    position: absolute;
+    top: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #ffffffb3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 4px #00000042;
+}
+
+.ltr .hai-notice .hai-dismiss-notice {
+    left: auto;
+    right: 5px;
+}
+
+.hai-notice .hai-dismiss-notice svg {
+    width: 25px;
+}
+
+.hai-notice--content {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.hai-notice--content ul.hai-notice--list {
+    list-style: disc;
+    padding: 0 13px;
+}
+
+.hai-notice--content p {
+    font-size: inherit;
+}
+
+.hai-notice--success .hai-notice {
+    background-color: #daffe4;
+    color: #008b19;
+}
+
+.hai-notice--error .hai-notice {
+    background-color: #ffdada;
+    color: #8b0000;
+}
+
+.hai-notice--warning .hai-notice {
+    background-color: #fff7da;
+    color: #8b7500;
+}
+
+.hai-admin-notice-wrap .hai-notice-wrap .hai-notice {
+    border: 1px solid #8cbedb;
+}
+
+.hai-admin-notice-wrap .hai-notice--success .hai-notice {
+    border-color: #8cdb9d;
+}
+
+.hai-admin-notice-wrap .hai-notice--error .hai-notice {
+    border-color: #db8c8c;
+}
+
+.hai-admin-notice-wrap .hai-notice--warning .hai-notice {
+    border-color: #dbb48c;
+}
+
+.hai-notice .hai-notice--title {
+    color: inherit;
+}
+
+.hai-notice--icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hai-notice--icon-wrap h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.hai-notice--icon {
+    display: flex;
+}
+
+.hai-checkbox-wrap label {
+    margin: 0;
+}
+
+.hai-checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hai-checkbox-wrap input[type="checkbox"] {
+    visibility: hidden;
+    display: none;
+}
+
+.hai-checkbox-wrap .hai-checkbox-label {
+    position: relative;
+    display: block;
+    width: 42px;
+    height: 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0, 0, 0);
+}
+
+.hai-checkbox-wrap .hai-checkbox-label:before {
+    content: "";
+    position: relative;
+    top: 1px;
+    left: 1px;
+    width: 40px;
+    height: 22px;
+    display: block;
+    background: #c8ccd4;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+}
+
+.hai-checkbox-wrap .hai-checkbox-label .hai-checkbox-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    display: block;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(154,153,153,0.75);
+    transition: all 0.2s ease;
+}
+
+.hai-checkbox-wrap .hai-checkbox-label .hai-checkbox-toggle svg {
+    margin: 7px;
+    fill: none;
+}
+
+.hai-checkbox-wrap .hai-checkbox-label .hai-checkbox-toggle svg path {
+    stroke: #c8ccd4;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 0;
+    transition: all 0.5s linear;
+}
+
+.hai-checkbox-wrap input[type="checkbox"]:checked + .hai-checkbox-label:before {
+    background: var(--hai-primary-color);
+}
+
+.hai-checkbox-wrap.has-disabled input[type="checkbox"]:checked + .hai-checkbox-label:before {
+    background: #db1616;
+}
+
+.hai-checkbox-wrap input[type="checkbox"]:checked + .hai-checkbox-label .hai-checkbox-toggle {
+    transform: translateX(21px);
+}
+
+.hai-checkbox-wrap input[type="checkbox"]:checked + .hai-checkbox-label .hai-checkbox-toggle path {
+    stroke: #000000;
+    stroke-dasharray: 25;
+    stroke-dashoffset: 25;
 }
 
 @media screen and (max-width: 1024px) {

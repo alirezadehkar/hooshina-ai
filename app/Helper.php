@@ -1,8 +1,6 @@
 <?php
 namespace HooshinaAi\App;
 
-use HooshinaAi\App\Generator\Generator;
-
 defined('ABSPATH') or die('No script kiddies please!');
 
 class Helper {
@@ -112,84 +110,29 @@ class Helper {
         return $parser->parse($markdown);
     }
 
-    public static function render_field($type, $name, $id, $label, $options = [], $selected = '', $attributes = []) {
-        $default_attributes = [
-            'description' => '',
-            'description_if' => '',
-            'description_if_condition' => false,
-            'class' => '',
-            'required' => false,
-            'disabled' => false,
-            'readonly' => false,
-            'placeholder' => '',
-            'data' => []
-        ];
+    public static function allow_svg_tags($svg_content) {
+        $allowed_html = array(
+            'svg' => array(
+                'xmlns' => array(),
+                'width' => array(),
+                'height' => array(),
+                'viewbox' => array(),
+                'fill' => array(),
+                'stroke' => array(),
+                'stroke-width' => array(),
+                'stroke-linecap' => array(),
+                'stroke-linejoin' => array(),
+            ),
+            'path' => array(
+                'd' => array(),
+            ),
+        );
+        
+        return wp_kses($svg_content, $allowed_html);
+    }
 
-        $attributes = array_merge($default_attributes, $attributes);
-        $field_classes = ['hai-form-field'];
-        if ($attributes['class']) {
-            $field_classes[] = $attributes['class'];
-        }
 
-        $html = '<div class="hai-option-field-wrap">';
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id), esc_html($label));
-        $html .= sprintf('<div class="%s">', esc_attr(implode(' ', $field_classes)));
-
-        if (!Connection::isConnected()) {
-            $html .= hooshina_ai_noconnect_placeholder(true);
-        } else {
-            switch ($type) {
-                case 'select':
-                    $html .= sprintf('<select name="%s" id="%s"', esc_attr($name), esc_attr($id));
-                    
-                    if ($attributes['required']) {
-                        $html .= ' required';
-                    }
-                    if ($attributes['disabled']) {
-                        $html .= ' disabled';
-                    }
-                    if ($attributes['readonly']) {
-                        $html .= ' readonly';
-                    }
-                    if ($attributes['placeholder']) {
-                        $html .= sprintf(' placeholder="%s"', esc_attr($attributes['placeholder']));
-                    }
-
-                    foreach ($attributes['data'] as $key => $value) {
-                        $html .= sprintf(' data-%s="%s"', esc_attr($key), esc_attr($value));
-                    }
-
-                    $html .= '>';
-                    $html .= sprintf('<option value="">%s</option>', esc_html__('Select...', 'hooshina-ai'));
-                    
-                    if (!empty($options)) {
-                        foreach ($options as $key => $title) {
-                            $html .= sprintf(
-                                '<option %s value="%s">%s</option>',
-                                selected($key, $selected, false),
-                                esc_attr($key),
-                                esc_html($title)
-                            );
-                        }
-                    }
-                    $html .= '</select>';
-                    break;
-            }
-
-            if ($attributes['description'] || $attributes['description_if']) {
-                $des_html = '<p class="hai-des">%s</p>';
-
-                if ($attributes['description_if']) {
-                    if ($attributes['description_if_condition']) {
-                        $html .= sprintf($des_html, esc_html($attributes['description_if']));
-                    }
-                } elseif($attributes['description']) {
-                    $html .= sprintf($des_html, esc_html($attributes['description']));
-                }
-            }
-        }
-
-        $html .= '</div></div>';
-        return $html;
+    public static function is_blocked_urls() {
+        return (new \WP_Http)->block_request('https://app.hooshina.com');
     }
 }

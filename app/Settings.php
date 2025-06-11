@@ -21,13 +21,15 @@ class Settings
         }
 
         $tabs = [
-            'content-generation' => [
+            'content-generator' => [
                 'default_content_tone' => [],
+                'default_content_lang' => [],
                 'default_image_style' => [],
                 'default_product_image_style' => [],
                 'default_image_size' => [],
             ],
-            'auto-content-generation' => [
+            'auto-content-generator' => [
+                'api_deactivated' => ['type' => 'checkbox'],
                 'default_post_type' => [],
                 'default_post_status' => [],
                 'default_author' => [],
@@ -54,11 +56,9 @@ class Settings
             }
         }
         
-        Notice::displaySuccess(__('Settings saved successfully.', 'hooshina-ai'));
-
-        $subtab = self::get_current_subtab();
-        wp_redirect(add_query_arg('subtab', $subtab));
-        exit;
+        Notice::success(__('Settings saved successfully.', 'hooshina-ai'))
+            ->dismissable()
+            ->adminNotice();
     }
 
     public static function get_option($key, $default = null){
@@ -76,6 +76,11 @@ class Settings
     public static function get_default_content_tone()
     {
         return self::get_option('default_content_tone', 'professional');
+    }
+
+    public static function get_default_content_lang()
+    {
+        return self::get_option('default_content_lang', Helper::get_current_lang());
     }
 
     public static function get_default_image_style()
@@ -124,7 +129,12 @@ class Settings
 
     public static function get_default_category()
     {
-        return self::get_option('default_category', get_option('default_category'));
+        return intval(self::get_option('default_category', get_option('default_category')));
+    }
+
+    public static function api_is_deactivated()
+    {
+        return self::get_option('api_deactivated', false);
     }
 
     public static function get_current_tab()
@@ -157,11 +167,18 @@ class Settings
     public static function get_menu_items()
     {
         $items = [
-            'general' => [
-                'title' => __('Settings', 'hooshina-ai'),
+            'content-generator' => [
+                'title' => __('Content Generator Settings', 'hooshina-ai'),
+            ],
+            'auto-content-generator' => [
+                'title' => __('Auto Content Generator', 'hooshina-ai'),
+                'badge' => self::api_is_deactivated() ? __('Deactivated', 'hooshina-ai') : __('Activated', 'hooshina-ai'),
+                'badge_classes' => self::api_is_deactivated() ? 'is-deactivated' : 'is-activated'
             ],
             'account' => [
                 'title' => __('Connect to Hooshina', 'hooshina-ai'),
+                'badge' => Connection::isConnected() ? __('Connected', 'hooshina-ai') : null,
+                'badge_classes' => Connection::isConnected() ? 'is-activated' : 'is-deactivated'
             ],
         ];
 
@@ -177,8 +194,10 @@ class Settings
         $imageStyles = GeneratorHelper::get_image_styles(Generator::TextToImage);
         $productImageStyles = GeneratorHelper::get_image_styles(Generator::ProductImage);
         $imageSizes = GeneratorHelper::get_image_sizes();
+        $languages = GeneratorHelper::get_supported_lanuages();
         
         $defContentTone = self::get_default_content_tone();
+        $defContentLang = self::get_default_content_lang();
         $defImageStyle = self::get_default_image_style();
         $defProductImageStyle = self::get_default_product_image_style();
         $defImageSize = self::get_default_image_size();
@@ -187,6 +206,8 @@ class Settings
         $defAuthor = self::get_default_author();
         $defTaxonomy = self::get_default_taxonomy();
         $defCategory = self::get_default_category();
+
+        $apiDeactivated = self::api_is_deactivated();
 
         $accountBalance = (new Account)->get_balance();
 
@@ -205,7 +226,10 @@ class Settings
             'defTaxonomy',
             'defCategory',
             'accountBalance',
-            'subtab'
+            'subtab',
+            'apiDeactivated',
+            'languages',
+            'defContentLang'
         ));
     }
 }

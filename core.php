@@ -9,9 +9,14 @@ if (!defined('ABSPATH')) {
 use HooshinaAi\App\Assets;
 use HooshinaAi\App\Options;
 use HooshinaAi\App\mihanwpUpdater;
-use HooshinaAi\App\Api\Post\CreatePost as CreatePostApi;
+use HooshinaAi\App\Api\Routes\CreatePostApi;
+use HooshinaAi\App\Api\Routes\TermsListApi;
 use HooshinaAi\App\Connection;
+use HooshinaAi\App\Fields;
+use HooshinaAi\App\Helper;
 use HooshinaAi\App\Hooks;
+use HooshinaAi\App\Notice\Notice;
+use HooshinaAi\App\Settings;
 
 final class Hooshina_Ai_Plugin {
     private static $instance = null;
@@ -52,7 +57,10 @@ final class Hooshina_Ai_Plugin {
 
         Hooks::init();
         
-        new CreatePostApi();
+        if(Connection::isConnected() && !Settings::api_is_deactivated()){
+            new CreatePostApi;
+            new TermsListApi;
+        }
     }
 
     public function enqueue_front_assets()
@@ -134,16 +142,26 @@ final class Hooshina_Ai_Plugin {
         $min_php_version = '7.4';
         $errors = [];
 
+        $this->register_autoload();
+
         if(!version_compare(phpversion(),$min_php_version,'>=')) {
             // translators: %s is the minimum php version
             $errors[] = sprintf(__('We detect your server php version is to old, this plugin need php version %s. please call to your host service to update php', 'hooshina-ai'), $min_php_version);
         }
 
         if(!empty($errors)){
-            add_action('admin_notices', function () use ($errors){
-                $title = __('Hooshina Plugin:', 'hooshina-ai');
-                printf('<div class="notice notice-error notice-alt"> <p><strong>%s</strong> %s</p> </div>', esc_html($title), esc_html(implode('<hr>', $errors)));
-            }, 1);
+            Notice::error(
+                __('Hooshina Plugin:', 'hooshina-ai'),
+                $errors
+            )->adminNotice();
+        }
+
+        
+        if(Helper::is_blocked_urls()){
+            Notice::error(
+                __('External URL access is blocked by WordPress configuration', 'hooshina-ai'),
+                __('To fix this, please add app.hooshina.com to the list of allowed hosts in your wp-config.php file.', 'hooshina-ai'),
+            )->adminNotice();
         }
     }
 

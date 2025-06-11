@@ -102,24 +102,24 @@ class Logger{
     /**
      * Add a log entry with a diagnostic message for the developer.
      */
-    public static function debug( $message, $name = '' ) {
-        return static::add( $message, $name, 'debug' );
+    public static function debug( $message ) {
+        return static::add( $message, 'debug' );
     }
 
 
     /**
      * Add a log entry with an informational message for the user.
      */
-    public static function info( $message, $name = '' ) {
-        return static::add( $message, $name, 'info' );
+    public static function info( $message ) {
+        return static::add( $message, 'info' );
     }
 
 
     /**
      * Add a log entry with a warning message.
      */
-    public static function warning( $message, $name = '' ) {
-        return static::add( $message, $name, 'warning' );
+    public static function warning( $message ) {
+        return static::add( $message, 'warning' );
     }
 
 
@@ -127,8 +127,8 @@ class Logger{
      * Add a log entry with an error - usually followed by
      * script termination.
      */
-    public static function error( $message, $name = '' ) {
-        return static::add( $message, $name, 'error' );
+    public static function error( $message ) {
+        return static::add( $message, 'error' );
     }
 
 
@@ -189,7 +189,7 @@ class Logger{
      *
      * This function does not update the pretty log.
      */
-    private static function add( $message, $name = '', $level = 'debug' ) {
+    private static function add( \Exception $exception, $level = 'debug' ) {
         Logger::$log_level = $level;
         /* Check if the logging level severity warrants writing this log */
         if ( static::$log_level_integers[$level] > static::$log_level_integers[static::$log_level] ){
@@ -199,8 +199,9 @@ class Logger{
         /* Create the log entry */
         $log_entry = [
             'timestamp' => time(),
-            'name' => $name,
-            'message' => $message,
+            'message' => $exception->getMessage(),
+            'line' => $exception->getLine(),
+            'file' => $exception->getFile(),
             'level' => $level,
         ];
 
@@ -214,10 +215,7 @@ class Logger{
 
         /* Write the log to output, if requested */
         if ( static::$logger_ready && count( static::$output_streams ) > 0 ) {
-            $output_line = static::format_log_entry( $log_entry ) . PHP_EOL;
-            /*foreach ( static::$output_streams as $key => $stream ) {
-                fputs( $stream, $output_line );
-            }*/
+            static::format_log_entry( $log_entry ) . PHP_EOL;
         }
 
         return $log_entry;
@@ -244,12 +242,13 @@ class Logger{
                 $log_line .= $log_entry['name'] . " => ";
             }
             $log_line .= $log_entry['message'];
+            $log_line .= "\n[FILE]=> " . $log_entry['file'] . ":" . $log_entry['line'] . "\n";
         }
-    
-        if (method_exists('static', 'logPath') && static::logPath()) {
+
+        if (method_exists(self::class, 'logPath') && static::logPath()) {
             $filesystem = self::filesystem();
             $log_path = static::logPath();
-            
+
             if ($filesystem && $filesystem->exists(dirname($log_path))) {
                 if ($filesystem->exists($log_path)) {
                     $existing_content = $filesystem->get_contents($log_path);

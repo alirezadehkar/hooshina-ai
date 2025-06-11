@@ -6,6 +6,7 @@ jQuery(document).ready(function($){
             this.initAuthorSelect();
             this.initAjaxSubmitHandler();
             this.initRemindConnectionNotice();
+            this.dismissAdminNotice();
         },
 
         bindEvents: function() {
@@ -222,6 +223,14 @@ jQuery(document).ready(function($){
                         button.removeClass('disabled');
                     }
                 });
+            });
+        },
+
+        dismissAdminNotice: function(){
+            $(document).on('click', '.hai-dismiss-notice', function(e){
+                e.preventDefault();
+
+                $(this).closest('.hai-admin-notice-wrap')?.fadeOut();
             });
         }
     };

@@ -49,7 +49,7 @@ class Callback
         $product->update_meta_data('hooshina_ai_show_product_reviews_summary', $checkboxValue);
     }
 
-    public function handle_connection_notices()
+    public static function handle_connection_notices()
     {
         if(!Connection::isConnected() && !Options::hideRemindNotice()){
             add_action('admin_notices', function (){ ?>

@@ -3,18 +3,18 @@ namespace HooshinaAi\App\Notice;
 
 class Notice
 {
-    public static function displaySuccess($message)
+    public static function success($message, $content = null)
     {
-        return new NoticeSuccess($message);
+        return new NoticeSuccess($message, $content);
     }
 
-    public static function displayWarning($message)
+    public static function warning($message, $content = null)
     {
-        return new NoticeWarning($message);
+        return new NoticeWarning($message, $content);
     }
 
-    public static function displayError($message)
+    public static function error($message, $content = null)
     {
-        return new NoticeError($message);
+        return new NoticeError($message, $content);
     }
 }

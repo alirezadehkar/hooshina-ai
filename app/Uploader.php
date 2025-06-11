@@ -65,7 +65,7 @@ class Uploader
     
             return (array) $data;
         } catch(\Throwable $th){
-            Logger::debug($th->getMessage());
+            Logger::error($th);
             return [];
         }
     }

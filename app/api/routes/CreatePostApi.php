@@ -1,70 +1,24 @@
 <?php
 
-namespace HooshinaAi\App\Api\Post;
+namespace HooshinaAi\App\Api\Routes;
 
 use HooshinaAi\App\Api\BaseApi;
+use HooshinaAi\App\PostSeoData;
 use HooshinaAi\App\Settings;
 use HooshinaAi\App\Uploader;
+use HooshinaAi\App\WPBlockConverter;
 use Parsedown;
 
-class CreatePost extends BaseApi 
+class CreatePostApi extends BaseApi 
 {
     protected $rest_base = 'posts/publish';
     private $parsedown;
-    private $rewrite_rules_flushed = false;
 
     public function __construct() 
     {
         parent::__construct();
         $this->parsedown = new Parsedown();
         $this->parsedown->setSafeMode(false);
-        
-        add_action('rest_api_init', [$this, 'handle_check_and_flush_routes']);
-        add_action('init', [$this, 'handle_add_custom_rewrite_rules']);
-    }
-
-    public function handle_add_custom_rewrite_rules() 
-    {
-        $namespace = $this->get_namespace();
-        $endpoint = $this->get_rest_base();
-
-        add_rewrite_rule(
-            "^{$namespace}/{$endpoint}/?$",
-            "index.php?rest_route=/{$namespace}/{$endpoint}",
-            'top'
-        );
-
-        $rules = get_option('rewrite_rules');
-        $rule_pattern = "^{$namespace}/{$endpoint}/?$";
-        
-        if (!isset($rules[$rule_pattern]) && !$this->rewrite_rules_flushed) {
-            $this->flush_rewrite_rules();
-        }
-    }
-
-    private function flush_rewrite_rules() 
-    {
-        if (!$this->rewrite_rules_flushed) {
-            flush_rewrite_rules();
-            $this->rewrite_rules_flushed = true;
-        }
-    }
-
-    public function handle_check_and_flush_routes() 
-    {
-        $routes = rest_get_server()->get_routes();
-        $our_route = '/' . $this->get_namespace() . '/' . $this->get_rest_base();
-        
-        if (!isset($routes[$our_route])) {
-            $this->flush_rewrite_rules();
-        }
-    }
-
-    private function create_response($data, $status = 200) 
-    {
-        $response = rest_ensure_response($data);
-        $response->set_status($status);
-        return $response;
     }
 
     public function register_routes() 
@@ -87,6 +41,25 @@ class CreatePost extends BaseApi
                             'type' => 'string',
                             'sanitize_callback' => 'wp_kses_post',
                         ],
+                        'post_type' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => function($param) {
+                                $allowed_types = ['post', 'page', 'product'];
+                                return in_array($param, $allowed_types);
+                            }
+                        ],
+                        'taxonomy' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'category' => [
+                            'required' => true,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
                         'sections' => [
                             'required' => false,
                             'type' => 'array',
@@ -98,6 +71,7 @@ class CreatePost extends BaseApi
                         'featured_image_id' => [
                             'required' => false,
                             'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
                 ],
@@ -145,21 +119,25 @@ class CreatePost extends BaseApi
     }
 
     private function convert_markdown_to_html($content) 
-    {
+    {        
         return $this->parsedown->text($content);
     }
 
-    private function create_post($title, $content, $featured_id = null) 
+    private function create_post($title, $content, $taxonomy, $category_slug, $featured_id = null) 
     {
         $defPostType = Settings::get_default_post_type();
         $defPostStatus = Settings::get_default_post_status();
         $defAuthor = Settings::get_default_author();
-        $defTaxonomy = Settings::get_default_taxonomy();
-        $defCategory = Settings::get_default_category();
+        $defTaxonomy = $taxonomy ?: 'category';
+
+        $term = get_term_by('slug', $category_slug, $defTaxonomy);
+
+        $converter = new WPBlockConverter($content);
+        $blocks = $converter->convert(); 
 
         $post_data = [
             'post_title' => $title,
-            'post_content' => $content,
+            'post_content' => $blocks,
             'post_status' => $defPostStatus ?: 'draft',
             'post_type' => $defPostType ?: 'post',
         ];
@@ -175,20 +153,31 @@ class CreatePost extends BaseApi
                 set_post_thumbnail($post_id, $featured_id);
             }
 
-            if ($defTaxonomy && $defCategory) {
-                wp_set_object_terms($post_id, $defCategory, $defTaxonomy);
-            }
+            if ($term && !is_wp_error($term)) {
+                wp_set_object_terms($post_id, $term->term_id, $defTaxonomy);
+            }            
+        } else {
+            return false;
         }
 
         return $post_id;
     }
 
-    public function handle_request($request) 
+    private function generate_seo_data($post_id)
+    {
+        (new PostSeoData($post_id))->bulk_regenerate();
+    }
+
+    public function handle_request($request)
     {
         $params = $request->get_params();
         
         try {
             $rawContent = $params['content'] ?? null;
+            $sections = $params['sections'] ?? [];
+            $images = $params['images'] ?? [];
+            $taxonomy = $params['taxonomy'] ?? null;
+            $category_slug = $params['category'] ?? null;
 
             if(empty($rawContent)){
                 return $this->create_response([
@@ -197,18 +186,44 @@ class CreatePost extends BaseApi
                 ], 400);
             }
 
-            $processed_images = $this->process_images($params['images'] ?? []);
+            $processed_images = $this->process_images($images);
             
-            $content = $this->replace_temp_ids_with_urls($rawContent, $processed_images);
+            $content_with_urls = $this->replace_temp_ids_with_urls($rawContent, $processed_images);
             
-            $html_content = $this->convert_markdown_to_html($content);
+            $final_content = $content_with_urls;
+            
+            if (!empty($sections) && is_array($sections) && !empty($processed_images)) {
+                foreach ($sections as $section) {
+                    if (isset($section['title']) && !empty($section['title']) && isset($section['image_temp_id']) && !empty($section['image_temp_id'])) {
+                        $sectionTitle = $section['title'];
+                        $imageTempId = $section['image_temp_id'];
+                        
+                        if (isset($processed_images[$imageTempId])) {
+                            $imageUrl = $processed_images[$imageTempId]['url'];
+                            
+                            $imageMarkdown = "\n\n![" . esc_attr($sectionTitle) . "](" . esc_url($imageUrl) . ")\n\n";
+          
+                            $escapedSectionTitle = preg_quote($sectionTitle, '/');
+
+                            $final_content = preg_replace(
+                                '/^(#+\\s*)?' . $escapedSectionTitle . '(\\s*.*\\R)/m', 
+                                '$0' . $imageMarkdown, 
+                                $final_content,
+                                1
+                            );
+                        }
+                    }
+                }
+            }
+
+            $html_content = $this->convert_markdown_to_html($final_content);
             
             $featured_id = null;
             if (isset($params['featured_image_id']) && isset($processed_images[$params['featured_image_id']])) {
                 $featured_id = $processed_images[$params['featured_image_id']]['id'];
             }
             
-            $post_id = $this->create_post($params['title'], $html_content, $featured_id);
+            $post_id = $this->create_post($params['title'], $html_content, $taxonomy, $category_slug, $featured_id);
             
             if (is_wp_error($post_id)) {
                 return $this->create_response([
@@ -216,6 +231,8 @@ class CreatePost extends BaseApi
                     'message' => $post_id->get_error_message(),
                 ], 500);
             }
+
+            $this->generate_seo_data($post_id);
             
             return $this->create_response([
                 'success' => true,

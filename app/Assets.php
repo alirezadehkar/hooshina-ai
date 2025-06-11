@@ -100,7 +100,7 @@ class Assets {
                     'image_style' => Settings::get_default_image_style(),
                     'product_image_style' => Settings::get_default_product_image_style(),
                     'image_size' => Settings::get_default_image_size(),
-                    'content_lang' => Helper::get_current_lang(),
+                    'content_lang' => Settings::get_default_content_lang(),
                     'content_tone' => Settings::get_default_content_tone(),
                     'post_category' => Settings::get_default_category()
                 ]
