@@ -7,16 +7,6 @@ use HooshinaAi\App\Uploader;
 
 class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
 {
-    private function upload_with_url($url)
-    {
-        $uploader = new Uploader($url);
-        $uploadData = $uploader->upload();
-        if(is_array($uploadData) && isset($uploadData['url'])){
-            return $uploadData;
-        }
-
-        return false;
-    }
     public function generate()
     {
         $client = new HaiClient();
@@ -47,7 +37,7 @@ class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
         $contentId = $response ? $this->find($response, 'content_id') : null;
 
         if($status == 'done' && filter_var($url, FILTER_VALIDATE_URL)){
-            $uploadData = $this->upload_with_url($url);
+            $uploadData = $this->uploadFile($url);
         }
 
         return [
@@ -83,7 +73,7 @@ class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
         $status = $response ? $this->find($response, 'status') : null;
 
         if(filter_var($url, FILTER_VALIDATE_URL) && $status == 'done'){
-            $uploadData = $this->upload_with_url($url);
+            $uploadData = $this->uploadFile($url);
         }
 
         return ['content' => $url, 'id' => $uploadData['id'] ?? null, 'status' => $status];

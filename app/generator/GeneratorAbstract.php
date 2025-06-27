@@ -1,6 +1,8 @@
 <?php
 namespace HooshinaAi\App\Generator;
 
+use HooshinaAi\App\Uploader;
+
 abstract class GeneratorAbstract
 {
     protected $params = [];
@@ -64,5 +66,11 @@ abstract class GeneratorAbstract
         }
 
         return $lastValue;
+    }
+
+    protected function uploadFile($url)
+    {
+        $uploader = new Uploader($url);
+        return $uploader->uploadWithUrl();
     }
 }

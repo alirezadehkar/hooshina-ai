@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Hooshina Ai\n"
-"POT-Creation-Date: 2025-06-09 17:25+0330\n"
-"PO-Revision-Date: 2025-06-09 17:25+0330\n"
+"POT-Creation-Date: 2025-06-12 21:06+0330\n"
+"PO-Revision-Date: 2025-06-12 21:07+0330\n"
 "Last-Translator: \n"
 "Language-Team: Hooshina Team (support@hooshina.com)\n"
 "Language: fa_IR\n"
@@ -20,279 +20,304 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #. Author of the plugin/theme
-#: app/AdminMenu.php:18 app/AdminMenu.php:19
+#: app/AdminMenu.php:18 app/AdminMenu.php:19 app/Callback.php:115
 msgid "Hooshina"
 msgstr "هوشینا"
 
-#: app/Ajax.php:56 app/Ajax.php:179
+#: app/Ajax.php:56 app/Ajax.php:193
 msgid "Balance in Hooshina account is insufficient."
 msgstr "موجودی حساب شما در هوشینا کافی است."
 
-#: app/Ajax.php:95
+#: app/Ajax.php:66
+msgid "Invalid subject value."
+msgstr "موضوع ورودی نامعتبر است."
+
+#: app/Ajax.php:109
 msgid "Invalid response."
 msgstr "پاسخ نامعتبر است."
 
-#: app/Ajax.php:141 app/Ajax.php:159
+#: app/Ajax.php:155 app/Ajax.php:173
 msgid "There is insufficient account balance."
 msgstr "موجودی حساب کافی نیست."
 
-#: app/Ajax.php:144
+#: app/Ajax.php:158
 msgid "The account balance is sufficient."
 msgstr "موجودی حساب کافی است."
 
-#: app/Ajax.php:155
+#: app/Ajax.php:169
 msgid "Account balance is unavailable."
 msgstr "موجودی حساب در دسترس نیست."
 
 #. translators: %s is the balance amount.
-#: app/Ajax.php:166
+#: app/Ajax.php:180
 #, php-format
 msgid "Balance: %s"
 msgstr "موجودی: %s"
 
-#: app/Ajax.php:166 views/admin/pages/account-tab.php:12
+#: app/Ajax.php:180 views/admin/pages/account-tab.php:12
 msgid "Usd"
 msgstr "دلار"
 
-#: app/Ajax.php:166 views/admin/pages/account-tab.php:12
+#: app/Ajax.php:180 views/admin/pages/account-tab.php:12
 msgid "Toman"
 msgstr "تومان"
 
-#: app/Ajax.php:186
+#: app/Ajax.php:200
 msgid "Invalid request."
 msgstr "درخواست نامعتبر است."
 
-#: app/Ajax.php:204 app/Ajax.php:303
+#: app/Ajax.php:218 app/Ajax.php:317
 msgid "Product not found."
 msgstr "محصول یافت نشد."
 
-#: app/Ajax.php:228
+#: app/Ajax.php:242
 msgid "No comments with a suitable rating were found to generate a summary."
 msgstr "نظر با امتیاز مناسبی برای تولید خلاصه یافت نشد."
 
-#: app/Ajax.php:248
+#: app/Ajax.php:262
 msgid "Comment not found."
 msgstr "نظر یافت نشد."
 
-#: app/Ajax.php:273 app/Ajax.php:310 app/Assets.php:131
+#: app/Ajax.php:287 app/Ajax.php:324 app/Assets.php:136
 msgid "An error occurred, please try again."
 msgstr "خطایی رخ داد، مجدد تلاش کنید."
 
-#: app/Ajax.php:293 app/Ajax.php:330
+#: app/Ajax.php:307 app/Ajax.php:344
 msgid "Invalid input data."
 msgstr "اطلاعات ورودی نامعتبر است."
 
-#: app/Ajax.php:316
+#: app/Ajax.php:330
 msgid "Summary of product reviews recorded."
 msgstr "خلاصه نظرات محصول ثبت شد."
 
-#: app/Ajax.php:338
+#: app/Ajax.php:352
 msgid "Parent comment not found."
 msgstr "کامنت اصلی یافت نشد."
 
-#: app/Ajax.php:355
+#: app/Ajax.php:369
 msgid "Failed to submit comment answer."
 msgstr "خطای در ثبت نظر رخ داد."
 
-#: app/Ajax.php:363
+#: app/Ajax.php:377
 msgid "Comment answer submitted successfully."
 msgstr "ثبت نظر باموفقیت انجام شد."
 
 #. Plugin Name of the plugin/theme
-#: app/Assets.php:110 app/Assets.php:111 app/Assets.php:112 app/Assets.php:113
+#: app/Assets.php:115 app/Assets.php:116 app/Assets.php:117 app/Assets.php:118
 msgid "Hooshina Ai"
 msgstr "هوشینا Ai"
 
-#: app/Assets.php:114
+#: app/Assets.php:119
 msgid "Stay a few steps ahead of the rest with Hooshina Ai."
 msgstr "با هوشینا Ai چند قدم جلوتر از بقیه باشید."
 
-#: app/Assets.php:115
+#: app/Assets.php:120
 msgid "You can intelligently generate text and images."
 msgstr "شما می توانید به صورت هوشمند متن و تصویر تولید کنید."
 
-#: app/Assets.php:116 app/Settings.php:177
+#: app/Assets.php:121 app/Settings.php:179
 msgid "Connect to Hooshina"
 msgstr "اتصال به هوشینا"
 
-#: app/Assets.php:117
+#: app/Assets.php:122
 msgid "Revoke Connection"
 msgstr "لغو ارتباط"
 
-#: app/Assets.php:118
+#: app/Assets.php:123
 msgid "Style"
 msgstr "استایل"
 
-#: app/Assets.php:119
+#: app/Assets.php:124
 msgid "Size"
 msgstr "سایز"
 
-#: app/Assets.php:120
+#: app/Assets.php:125
 msgid "Language"
 msgstr "زبان"
 
-#: app/Assets.php:121
+#: app/Assets.php:126
 msgid "Tone"
 msgstr "لحن"
 
-#: app/Assets.php:122
+#: app/Assets.php:127
 msgid "Type something..."
 msgstr "چیزی تایپ کن..."
 
-#: app/Assets.php:123
+#: app/Assets.php:128
 msgid "Doing..."
 msgstr "در حال انجام..."
 
-#: app/Assets.php:124
+#: app/Assets.php:129
 msgid "Generate"
 msgstr "تولید کن"
 
-#: app/Assets.php:125
+#: app/Assets.php:130
 msgid "Type"
 msgstr "نوع"
 
-#: app/Assets.php:126
+#: app/Assets.php:131
 msgid "Generate Title with Hooshina Ai"
 msgstr "تولید عنوان با هوشینا Ai"
 
-#: app/Assets.php:127
+#: app/Assets.php:132
 msgid "Generate Description with Hooshina Ai"
 msgstr "تولید توضیحات با هوشینا Ai"
 
-#: app/Assets.php:128
+#: app/Assets.php:133
 msgid "Reply Comment with Hooshina Ai"
 msgstr "پاسخ نظر با هوشینا Ai"
 
-#: app/Assets.php:129
+#: app/Assets.php:134
 msgid "Generate Image with Hooshina Ai"
 msgstr "تولید تصویر با هوشینا Ai"
 
-#: app/Assets.php:130
+#: app/Assets.php:135
 msgid "Generate was done successfully."
 msgstr "تولید باموفقیت انجام شد."
 
-#: app/Assets.php:132
+#: app/Assets.php:137
 msgid "Select Image"
 msgstr "انتخاب تصویر"
 
-#: app/Assets.php:133
+#: app/Assets.php:138
 msgid "Click for select Image"
 msgstr "برای انتخاب تصویر کلیک کنید"
 
-#: app/Assets.php:134
+#: app/Assets.php:139
 msgid "Generate product image"
 msgstr "تولید تصویر محصول"
 
-#: app/Assets.php:135
+#: app/Assets.php:140
 msgid "Answer For:"
 msgstr "پاسخ برای:"
 
-#: app/Assets.php:136
+#: app/Assets.php:141
 msgid "Submit"
 msgstr "ثبت"
 
-#: app/Assets.php:137
+#: app/Assets.php:142
 msgid "Ai Answer"
 msgstr "پاسخ هوش مصنوعی"
 
-#: app/Assets.php:138
+#: app/Assets.php:143
 msgid "Delete Thumbnail"
 msgstr "حذف تصویر شاخص"
 
-#: app/Assets.php:139
+#: app/Assets.php:144
 msgid "Add Thumbnail"
 msgstr "افزودن تصویر شاخص"
 
-#: app/Assets.php:140
+#: app/Assets.php:145
 msgid "Generate Excerpt with Hooshina Ai"
 msgstr "تولید خلاصه با هوشینا Ai"
 
-#: app/Assets.php:141
+#: app/Assets.php:146
 msgid "Your website is connected and you can use Hooshina Ai."
 msgstr "وب سایت شما متصل است و می توانید از هوشینا Ai استفاده کنید."
 
-#: app/Assets.php:142
+#: app/Assets.php:147
 msgid "To use Hooshina and use artificial intelligence in production"
 msgstr ""
 "برای استفاده از هوشینا و استفاده از هوش مصنوعی تولید محتوا و تصویر باید "
 "وبسایت خودرا متصل کنید"
 
-#: app/Assets.php:143
+#: app/Assets.php:148
 msgid "Hooshina Connect"
 msgstr "هوشینا کانکت"
 
-#: app/Assets.php:144
+#: app/Assets.php:149
 msgid "Receiving reply..."
 msgstr "در انتظار دریافت پاسخ..."
 
-#: app/Assets.php:145
+#: app/Assets.php:150
 msgid "Select the desired answer."
 msgstr "پاسخ موردنظر را انتخاب کنید."
 
-#: app/Assets.php:146
+#: app/Assets.php:151
 msgid "Generate keyword with Hooshina Ai"
 msgstr "تولید کلمه کلیدی با هوشینا Ai"
 
-#: app/Assets.php:147 views/admin/pages/account-tab.php:19
+#: app/Assets.php:152 views/admin/pages/account-tab.php:19
 msgid "Charge Account"
 msgstr "شارژ حساب"
 
-#: app/Assets.php:148
+#: app/Assets.php:153
 msgid "Generate customer reviews summary with Hooshina Ai"
 msgstr "تولید خلاصه نظرات مشتریان با هوشینا Ai"
 
-#: app/Assets.php:149
+#: app/Assets.php:154
 msgid "Image replace with Hooshina Ai"
 msgstr "جایگزینی تصویر با هوشینا Ai"
 
-#: app/Assets.php:150 app/Fields.php:87
+#: app/Assets.php:155
+msgid "Audio replace with Hooshina Ai"
+msgstr "جایگزینی صوت با هوشینا Ai"
+
+#: app/Assets.php:156 app/Fields.php:87
 msgid "Select..."
 msgstr "انتخاب..."
 
-#: app/Assets.php:152
+#: app/Assets.php:158
 msgid "The results could not be loaded."
 msgstr "بارگذاری نتیجه انجام نشد."
 
-#: app/Assets.php:153
+#: app/Assets.php:159
 #, php-format
 msgid "Please delete %d characters"
 msgstr "لطفا کاراکتر %d را حذف کن"
 
-#: app/Assets.php:154
+#: app/Assets.php:160
 #, php-format
 msgid "Please enter %d or more characters"
 msgstr "لطفا %d یا کاراکترهای بیشتری وارد کنید"
 
-#: app/Assets.php:155
+#: app/Assets.php:161
 msgid "Loading more results..."
 msgstr "در حال بارگذاری نتایج بیشتر..."
 
-#: app/Assets.php:156
+#: app/Assets.php:162
 #, php-format
 msgid "You can only select %d items"
 msgstr "شما فقط می‌توانید %d مورد را انتخاب کنید"
 
-#: app/Assets.php:157
+#: app/Assets.php:163
 msgid "No results found"
 msgstr "هیچ نتیجه‌ای یافت نشد"
 
-#: app/Assets.php:158
+#: app/Assets.php:164
 msgid "Searching..."
 msgstr "در حال جستجو..."
 
-#: app/Assets.php:160
+#: app/Assets.php:166
 msgid "Your account balance is insufficient"
 msgstr "موجودی حساب شما کافی نیست"
 
-#: app/Assets.php:161
+#: app/Assets.php:167
 msgid "To use Hooshina services, you must top up your account."
 msgstr "برای استفاده از سرویس های هوشینا باید حساب خود را شارژ کنید."
 
-#: app/Assets.php:162
+#: app/Assets.php:168
 msgid ""
 "Before entering SEO information, be sure to complete the post title and "
 "content."
 msgstr "قبل از وارد کردن اطلاعات سئو، حتماً عنوان و محتوای پست را تکمیل کنید."
+
+#: app/Assets.php:169
+msgid "Voices"
+msgstr "صداها"
+
+#: app/Assets.php:170
+msgid "From"
+msgstr "از"
+
+#: app/Assets.php:171
+msgid "Characters"
+msgstr "کاراکتر"
+
+#: app/Assets.php:172
+#, php-format
+msgid "Characters should not exceed %d."
+msgstr "کاراکترها نباید بیشتر از %d باشد."
 
 #: app/Callback.php:36
 msgid "Product reviews summary"
@@ -318,23 +343,23 @@ msgstr "بعدا یادآوری کن"
 msgid "Settings saved successfully."
 msgstr "ذخیره تغییرات باموفقیت انجام شد."
 
-#: app/Settings.php:169
+#: app/Settings.php:171
 msgid "Content Generator Settings"
 msgstr "تنظیمات تولید محتوا"
 
-#: app/Settings.php:172
+#: app/Settings.php:174
 msgid "Auto Content Generator"
 msgstr "تولید محتوای خودکار"
 
-#: app/Settings.php:173
+#: app/Settings.php:175
 msgid "Deactivated"
 msgstr "غیرفعال شده"
 
-#: app/Settings.php:173
+#: app/Settings.php:175
 msgid "Activated"
 msgstr "فعال شده"
 
-#: app/Settings.php:178
+#: app/Settings.php:180
 msgid "Connected"
 msgstr "متصل شده"
 
@@ -346,21 +371,25 @@ msgstr "کلید دسترسی الزامیست."
 msgid "Invalid API key."
 msgstr "کلید دسترسی نامعتبر است."
 
-#: app/api/routes/CreatePostApi.php:185
+#: app/api/routes/CreatePostApi.php:188
 msgid "Content field is required"
 msgstr "فیلد content الزامیست"
 
-#: app/api/routes/CreatePostApi.php:239
+#: app/api/routes/CreatePostApi.php:242
 msgid "Content created successfully"
 msgstr "ایجاد محتوا باموفقیت انجام شد"
 
-#: app/generator/GeneratorHelper.php:100
+#: app/generator/GeneratorHelper.php:111
 msgid "Text"
 msgstr "متن"
 
-#: app/generator/GeneratorHelper.php:101
+#: app/generator/GeneratorHelper.php:112
 msgid "Image"
 msgstr "تصویر"
+
+#: app/generator/GeneratorHelper.php:113
+msgid "Text to Speech"
+msgstr "متن به صدا"
 
 #. translators: %s is the minimum php version
 #: core.php:149
@@ -843,11 +872,11 @@ msgstr ""
 msgid "Deactivation Hooshina API"
 msgstr "غیرفعالسازی API هوشینا"
 
-#: views/admin/pages/auto-content-generator-tab.php:41
+#: views/admin/pages/auto-content-generator-tab.php:43
 msgid "Post Status"
 msgstr "وضعیت پست"
 
-#: views/admin/pages/auto-content-generator-tab.php:45
+#: views/admin/pages/auto-content-generator-tab.php:47
 msgid ""
 "It is recommended to set the status to draft and publish posts after "
 "thorough review and making the desired changes."
@@ -855,11 +884,11 @@ msgstr ""
 "پیشنهاد می شود وضعیت را روی پیش نویس تنظیم و پست ها را پس از بررسی کامل و "
 "انجام تغییرات مورد نظر منتشر کنید."
 
-#: views/admin/pages/auto-content-generator-tab.php:53
+#: views/admin/pages/auto-content-generator-tab.php:55
 msgid "Post Author"
 msgstr "نویسنده پست"
 
-#: views/admin/pages/auto-content-generator-tab.php:69
+#: views/admin/pages/auto-content-generator-tab.php:71
 #: views/admin/pages/content-generator-tab.php:53
 msgid "Save Changes"
 msgstr "ذخیره تغییرات"

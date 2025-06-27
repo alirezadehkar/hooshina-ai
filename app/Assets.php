@@ -75,11 +75,14 @@ class Assets {
     {
         $types = GeneratorHelper::get_generator_types();
 
-        $contentTones = GeneratorHelper::get_content_tones();
-        $imageStyles = GeneratorHelper::get_image_styles(Generator::TextToImage);
-        $productImageStyles = GeneratorHelper::get_image_styles(Generator::ProductImage);
-        $imageSizes = GeneratorHelper::get_image_sizes();
-        $languages = GeneratorHelper::get_supported_lanuages();
+        if(Connection::isConnected()){
+            $contentTones = GeneratorHelper::get_content_tones();
+            $imageStyles = GeneratorHelper::get_image_styles(Generator::TextToImage);
+            $productImageStyles = GeneratorHelper::get_image_styles(Generator::ProductImage);
+            $imageSizes = GeneratorHelper::get_image_sizes();
+            $languages = GeneratorHelper::get_supported_lanuages();
+            $voices = GeneratorHelper::get_speech_voices();
+        }
 
         $params = array(
             'ajax_url' => admin_url('admin-ajax.php'),
@@ -91,18 +94,20 @@ class Assets {
 
             'generator' => [
                 'types' => $types,
-                'contentTones' => $contentTones,
-                'imageStyles' => $imageStyles,
-                'productImageStyles' => $productImageStyles,
-                'imageSizes' => $imageSizes,
-                'languages' => $languages,
+                'contentTones' => $contentTones ?? [],
+                'imageStyles' => $imageStyles ?? [],
+                'productImageStyles' => $productImageStyles ?? [],
+                'imageSizes' => $imageSizes ?? [],
+                'languages' => $languages ?? [],
+                'speechVoices' => $voices ?? [],
                 'defaults' => [
                     'image_style' => Settings::get_default_image_style(),
                     'product_image_style' => Settings::get_default_product_image_style(),
                     'image_size' => Settings::get_default_image_size(),
                     'content_lang' => Settings::get_default_content_lang(),
                     'content_tone' => Settings::get_default_content_tone(),
-                    'post_category' => Settings::get_default_category()
+                    'post_category' => Settings::get_default_category(),
+                    'speech_voice' => !empty($voices) ? array_keys($voices)[0] : null,
                 ]
             ],
 
@@ -147,6 +152,7 @@ class Assets {
                 'charge_account' => __('Charge Account', 'hooshina-ai'),
                 'product_review_generate' => __('Generate customer reviews summary with Hooshina Ai', 'hooshina-ai'),
                 'image_replace_button' => __('Image replace with Hooshina Ai', 'hooshina-ai'),
+                'audio_replace_button' => __('Audio replace with Hooshina Ai', 'hooshina-ai'),
                 'select' => __('Select...', 'hooshina-ai'),
                 'select2' => [
                     'errorLoading' => __('The results could not be loaded.', 'hooshina-ai'),
@@ -159,7 +165,11 @@ class Assets {
                 ],
                 'insufficient_balance' => __('Your account balance is insufficient', 'hooshina-ai'),
                 'insufficient_balance_description'=> __('To use Hooshina services, you must top up your account.', 'hooshina-ai'),
-                'seo_helper' => __('Before entering SEO information, be sure to complete the post title and content.', 'hooshina-ai')
+                'seo_helper' => __('Before entering SEO information, be sure to complete the post title and content.', 'hooshina-ai'),
+                'voices' => __('Voices', 'hooshina-ai'),
+                'from' => __('From', 'hooshina-ai'),
+                'characters' => __('Characters', 'hooshina-ai'),
+                'text_to_speech_is_over' => sprintf(__('Characters should not exceed %d.', 'hooshina-ai'), 1000), 
             ]
         );
 

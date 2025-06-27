@@ -5,6 +5,7 @@ class Generator
 {
     const TextToImage = 'text-to-image';
     const ProductImage = 'product-image';
+    const TextToSpeech = 'text-to-speech';
 
     const COMMENT_PROMPT_ID = 19;
     const PRODUCT_REVIEW_PROMPT_ID = 5;
@@ -22,5 +23,10 @@ class Generator
     public function image()
     {
         return new ImageGenerator();
+    }
+
+    public function audio()
+    {
+        return new AudioGenerator();
     }
 }

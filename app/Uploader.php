@@ -69,4 +69,14 @@ class Uploader
             return [];
         }
     }
+
+    public function uploadWithUrl()
+    {
+        $uploadData = $this->upload();
+        if(is_array($uploadData) && isset($uploadData['url'])){
+            return $uploadData;
+        }
+
+        return false;
+    }
 }

@@ -61,12 +61,21 @@ class Ajax
         $subject = isset($_POST['subject']) ? sanitize_textarea_field(wp_unslash($_POST['subject'])) : null;
         $type = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : null;
 
+        if(empty($subject)){
+            wp_send_json_error([
+                'msg' => __('Invalid subject value.', 'hooshina-ai'),
+                'status' => 'error'
+            ]);
+        }
+
         $size = isset($_POST['size']) ? sanitize_text_field(wp_unslash($_POST['size'])) : null;
         $style = isset($_POST['style']) ? sanitize_text_field(wp_unslash($_POST['style'])) : null;
         $image_url = isset($_POST['original_image']) ? sanitize_text_field(wp_unslash($_POST['original_image'])) : null;
 
         $lang = isset($_POST['lang']) ? sanitize_text_field(wp_unslash($_POST['lang'])) : null;
         $tone = isset($_POST['tone']) ? sanitize_text_field(wp_unslash($_POST['tone'])) : null;
+
+        $voice = isset($_POST['voice']) ? sanitize_text_field(wp_unslash($_POST['voice'])) : null;
 
         $buttonAction = isset($_POST['buttonAction']) ? sanitize_text_field(wp_unslash($_POST['buttonAction'])) : null;
 
@@ -78,6 +87,11 @@ class Ajax
                 'size' => $size,
                 'style' => $style,
                 'original_image' => $image_url
+            ])->generate();
+        } elseif($type == Generator::TextToSpeech) {
+            $generate = $generator->audio()->set_params([
+                'content' => $subject,
+                'voice' => $voice
             ])->generate();
         } else {
             $generate = $generator->content()->set_params([
@@ -97,7 +111,7 @@ class Ajax
             ]);
         }
 
-        if($type != 'image'){
+        if(!in_array($type, ['image', Generator::TextToSpeech])){
             $content = Helper::convertMarkdown($content);
         }
 

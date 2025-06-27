@@ -301,21 +301,38 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
                             }
                         );
                     } else {
-                        if (context.element?.name != 'core/image') {
-                            const newImageBlock = wp.blocks.createBlock('core/image', {
-                                url: content,
-                                align: 'center',
-                            });
+                        const imageAttrs = {
+                            url: content,
+                            align: 'center',
+                        };
 
-                            console.log(newImageBlock);
+                        if (context.element?.name != 'core/image') {
+                            const newImageBlock = wp.blocks.createBlock('core/image', imageAttrs);
 
                             insertBlocks(newImageBlock);
                         } else {
                             wp.data.dispatch('core/block-editor').updateBlock(
                                 context.element.clientId, 
-                                { attributes: { url: content, align: 'center' } }
+                                { attributes: imageAttrs }
                             );
                         }
+                    }
+                } else if (type === 'text-to-speech') {
+                    const audioAttrs = {
+                        src: content,
+                        align: 'center',
+                        id: options?.id
+                    };
+
+                    if (context.element?.name != 'core/audio') {
+                        const newImageBlock = wp.blocks.createBlock('core/audio', audioAttrs);
+
+                        insertBlocks(newImageBlock);
+                    } else {
+                        wp.data.dispatch('core/block-editor').updateBlock(
+                            context.element.clientId, 
+                            { attributes: audioAttrs }
+                        );
                     }
                 }
                 break;
@@ -349,6 +366,13 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
                         align: 'center' 
                     });
                     wp.data.dispatch('core/block-editor').insertBlocks(imageBlock);
+                } else if (type === 'text-to-speech') {
+                    const audioBlock = wp.blocks.createBlock('core/audio', {
+                        src: content,
+                        align: 'center',
+                        id: options?.id
+                    });
+                    wp.data.dispatch('core/block-editor').insertBlocks(audioBlock);
                 }
                 break;
 
@@ -378,6 +402,8 @@ export function ApplyContentToEditor({content, type, block = null, options}) {
                         });
                     } else if (type == 'image') {
                         editor.insertContent(`<img src="${content}" />`);
+                    } else if (type == 'text-to-speech') {
+                        editor.insertContent(`[audio mp3="${content}"][/audio]`);
                     }
                 } else {
                     simulateTyping(content, (text) => {

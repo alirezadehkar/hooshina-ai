@@ -1,5 +1,3 @@
-import {createTheme} from "@mui/material";
-
 const { useState, useEffect, useRef } = window.wp.element;
 
 export function useMutationObserver(
@@ -84,62 +82,6 @@ export function AutoClicker(url, target = '_self'){
     link.click();
     document.body.removeChild(link);
 }
-
-export const CustomTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        background: {
-            paper: '#333',
-        },
-        text: {
-            primary: '#ffffff',
-            secondary: '#aaaaaa',
-        },
-        primary: {
-            main: '#04b4cc',
-        },
-        secondary: {
-            main: '#a92424',
-        },
-        border: {
-            primary: '#555555',
-        }
-    },
-    typography: {
-        fontFamily: 'inherit',
-        button: {
-            textTransform: 'none',
-            color: '#000'
-        },
-        allVariants: {
-            fontFamily: 'inherit',
-            color: '#fff'
-        },
-    },
-    components: {
-        MuiPopover: {
-            styleOverrides: {
-                root: {
-                    zIndex: 130000,
-                }
-            }
-        },
-        MuiSnackbar: {
-            styleOverrides: {
-                root: {
-                    zIndex: 131000,
-                }
-            }
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    fontFamily: 'inherit',
-                },
-            }
-        }
-    }
-});
 
 export const HooshinaIcon = () => (<span className="hooshina-icon hai-icon-logo" />);
 

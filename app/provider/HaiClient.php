@@ -48,18 +48,20 @@ class HaiClient
             }
 
             $response = $handler($url, $args);
+
+            $resBody = wp_remote_retrieve_body($response);
     
             if (is_wp_error($response)) {
-                throw new \Exception('Invalid hooshina response: ' . $response->get_error_message());
+                throw new \Exception('Invalid hooshina response: ' . $resBody);
             }
     
             $status_code = wp_remote_retrieve_response_code($response);
     
             if ($status_code != 200) {
-                throw new \Exception('Invalid hooshina status code: ' . $status_code);
+                throw new \Exception("Invalid hooshina status code: ({$status_code})\n [RESPONSE] " . $resBody);
             }
     
-            return json_decode(wp_remote_retrieve_body($response), true);
+            return json_decode($resBody, true);
         } catch(\Throwable $th){
             Logger::error($th);
             return false;
