@@ -3,6 +3,16 @@ defined('ABSPATH') or die('No script kiddies please!');
 
 function hooshina_ai_get_version()
 {
+    static $version = null;
+    
+    if ($version !== null) {
+        return $version;
+    }
+    
+    if (defined('HOOSHINA_AI_VERSION')) {
+        return HOOSHINA_AI_VERSION;
+    }
+    
     if(!function_exists('get_plugin_data')){
         require_once(ABSPATH . 'wp-admin/includes/plugin.php');
     }
