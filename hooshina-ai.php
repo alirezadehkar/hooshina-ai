@@ -3,8 +3,8 @@
  * Plugin Name: Hooshina Ai
  * Plugin URI: https://hooshina.com
  * Author: Hooshina
- * Author URI: https://Hooshina.com
- * Version: 2.6.3
+ * Author URI: https://hooshina.com
+ * Version: 2.6.4
  * Description: Intelligent image and text production with the help of Hooshina Ai.
  * Text Domain: hooshina-ai
  * Domain Path: /languages
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 if(class_exists('Hooshina_Ai_Plugin'))
     return false;
 
-define('HOOSHINA_AI_VERSION', '2.6.3');
+define('HOOSHINA_AI_VERSION', '2.6.4');
 define('HOOSHINA_AI_PLUGIN_FILE_PATH', __FILE__);
 define('HOOSHINA_AI_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('HOOSHINA_AI_BASENAME', basename(dirname(__FILE__)));

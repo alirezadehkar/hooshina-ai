@@ -86,8 +86,6 @@ class Connection
             return false;
         }
 
-        return wp_remote_retrieve_body($response);
-
         $status_code = wp_remote_retrieve_response_code($response);
 
         if ($action !== 'revoke' && $status_code !== 200) {
@@ -221,16 +219,15 @@ class Connection
 
     public static function handle_event_check_connection_status()
     {
-        $auth = self::getConnectionAuth();
-        if (!$auth)
+        $siteKey = self::getConnectionSiteKey();
+        if (!$siteKey)
             return false;
 
-        if (!isset($auth) || self::verifyConnection($auth)){
+        if (self::verifySiteKey($siteKey)){
             return false;
         }
-
-        self::revokeConnection($auth);
-        delete_option(self::$connectionOptionKey);
+        
+        self::revokeConnection(self::getConnectionAuth());
     }
 
     public static function handle_register_cron()
