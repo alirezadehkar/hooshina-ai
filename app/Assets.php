@@ -134,6 +134,7 @@ class Assets {
                 'image_generate' => __('Generate Image with Hooshina Ai', 'hooshina-ai'),
                 'generate_success' => __('Generate was done successfully.', 'hooshina-ai'),
                 'generate_error' => __('An error occurred, please try again.', 'hooshina-ai'),
+                'generate_timeout' => __('Generating is taking longer than expected. Please try again in a few minutes.', 'hooshina-ai'),
                 'select_image' => __('Select Image', 'hooshina-ai'),
                 'click_select_image' => __('Click for select Image', 'hooshina-ai'),
                 'generate_product_image' => __('Generate product image', 'hooshina-ai'),

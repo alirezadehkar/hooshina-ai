@@ -103,24 +103,33 @@ class Ajax
         }
 
         $content = isset($generate['content']) ? $generate['content'] : null;
+        $status = isset($generate['status']) ? $generate['status'] : null;
+        $contentId = isset($generate['content_id']) ? $generate['content_id'] : null;
 
-        if (empty($content)){
+        // A queued job legitimately has no content yet, only a content id to
+        // poll. Speech is always queued now, so treating an empty body as a
+        // failure would reject every request before it had a chance to run.
+        $isQueued = $status && $status !== 'done' && !empty($contentId);
+
+        if (empty($content) && !$isQueued){
             wp_send_json_error([
                 'msg' => __('Invalid response.', 'hooshina-ai'),
                 'status' => 'error'
             ]);
         }
 
-        if(!in_array($type, ['image', Generator::TextToSpeech])){
+        if($content && !in_array($type, ['image', Generator::TextToSpeech])){
             $content = Helper::convertMarkdown($content);
         }
 
         wp_send_json_success([
-            'content' => $content, 
-            'id' => (isset($generate['id']) ? $generate['id'] : null), 
-            'status' => (isset($generate['status']) ? $generate['status'] : null),
-            'content_id' => (isset($generate['content_id']) ? $generate['content_id'] : null),
-            'status' => 'done'
+            'content' => $content,
+            'id' => (isset($generate['id']) ? $generate['id'] : null),
+            'content_id' => $contentId,
+            // A duplicate 'status' => 'done' used to sit at the end of this
+            // array and silently overwrite the real value, so the client was
+            // told every job had finished.
+            'status' => ($status ?: 'done'),
         ]);
     }
 
@@ -138,9 +147,29 @@ class Ajax
             wp_send_json_error();
 
         wp_send_json_success([
-            'content' => $imageStatus['content'], 
-            'id' => (isset($imageStatus['id']) ? $imageStatus['id'] : null), 
+            'content' => $imageStatus['content'],
+            'id' => (isset($imageStatus['id']) ? $imageStatus['id'] : null),
             'status' => (isset($imageStatus['status']) ? $imageStatus['status'] : null),
+        ]);
+    }
+
+    public static function handle_check_audio_status()
+    {
+        check_ajax_referer('hooshina_ai_nonce', 'nonce');
+
+        $contentId = isset($_POST['content_id']) ? sanitize_text_field(wp_unslash($_POST['content_id'])) : null;
+
+        $generator = new Generator();
+
+        $audioStatus = $generator->audio()->get_audio_status($contentId);
+
+        if (empty($audioStatus))
+            wp_send_json_error();
+
+        wp_send_json_success([
+            'content' => $audioStatus['content'],
+            'id' => (isset($audioStatus['id']) ? $audioStatus['id'] : null),
+            'status' => (isset($audioStatus['status']) ? $audioStatus['status'] : null),
         ]);
     }
 

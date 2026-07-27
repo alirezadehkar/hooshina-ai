@@ -40,6 +40,34 @@ final class Hooshina_Ai_Plugin {
         add_action('elementor/editor/before_enqueue_scripts', [$this, 'enqueue_admin_assets']);
 
         add_action('plugins_loaded', [$this, 'handleUpdater']);
+        add_action('plugins_loaded', [$this, 'handle_version_upgrade'], 20);
+    }
+
+    /**
+     * Clears cached lookup data after an update.
+     *
+     * The activation hook does not fire when a plugin is updated, and lists
+     * such as the speech voices are cached for a day. Without this an update
+     * that changes those lists would keep showing the previous values until the
+     * cache happened to expire.
+     */
+    public function handle_version_upgrade()
+    {
+        if (!class_exists('\HooshinaAi\App\Options')) {
+            return;
+        }
+
+        $stored = Options::get_option('hooshina_ai_installed_version');
+
+        if ($stored === HOOSHINA_AI_VERSION) {
+            return;
+        }
+
+        if (class_exists('\HooshinaAi\App\Generator\GeneratorHelper')) {
+            \HooshinaAi\App\Generator\GeneratorHelper::delete_cache();
+        }
+
+        Options::update_option('hooshina_ai_installed_version', HOOSHINA_AI_VERSION);
     }
 
     /**

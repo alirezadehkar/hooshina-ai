@@ -20,6 +20,7 @@ class Hooks
 
             add_action('wp_ajax_hai_generate_content', ['\HooshinaAi\App\Ajax', 'handle_generate_content']);
             add_action('wp_ajax_hai_check_image_status', ['\HooshinaAi\App\Ajax', 'handle_check_image_status']);
+            add_action('wp_ajax_hai_check_audio_status', ['\HooshinaAi\App\Ajax', 'handle_check_audio_status']);
 
             add_action('woocommerce_product_options_advanced', ['\HooshinaAi\App\Callback', 'handle_wc_edit_advanced_tab']);
             add_action('woocommerce_admin_process_product_object', ['\HooshinaAi\App\Callback', 'handle_save_edit_product_data']);
