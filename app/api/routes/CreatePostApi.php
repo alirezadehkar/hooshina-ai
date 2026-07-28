@@ -56,8 +56,11 @@ class CreatePostApi extends BaseApi
                             'type' => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
                         ],
+                        // Optional: a site may not expose its categories, and
+                        // an empty value means the post keeps whatever default
+                        // WordPress assigns.
                         'category' => [
-                            'required' => true,
+                            'required' => false,
                             'type' => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
                         ],
