@@ -103,6 +103,7 @@ final class Hooshina_Ai_Plugin {
     {
         Assets::enqueue_style('select2', Assets::get_css('select2.min'), [], '4.1.0');
         Assets::enqueue_style('hooshina-ai-admin', Assets::get_css('admin'));
+        Assets::enqueue_style('hooshina-ai-queue', Assets::get_css('queue'), ['hooshina-ai-admin']);
 
         Assets::enqueue_script('hooshina-ai-admin', Assets::get_js('admin'), ['jquery', 'select2'], null, true);
         Assets::enqueue_script('select2', Assets::get_js('select2.min'), ['jquery'], '4.1.0', true);
@@ -110,6 +111,10 @@ final class Hooshina_Ai_Plugin {
 
         Assets::enqueue_script('hooshina-ai-script', HOOSHINA_AI_BUILD_URL . 'index.js', ['wp-element', 'wp-components', 'wp-i18n', 'wp-hooks', 'wp-blocks', 'wp-rich-text', 'wp-editor'], hooshina_ai_get_asset_data('version'), true);
         Assets::localize_script('hooshina-ai-script', 'hai_data', Assets::get_localize_data());
+
+        // Loaded after the editor bundle so it can observe existing requests
+        // without changing their payload or creating duplicate generations.
+        Assets::enqueue_script('hooshina-ai-queue', Assets::get_js('queue'), ['jquery', 'hooshina-ai-script'], null, true);
     }
 
     public function register_autoload()

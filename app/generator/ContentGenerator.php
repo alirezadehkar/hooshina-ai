@@ -19,7 +19,9 @@ class ContentGenerator extends GeneratorAbstract implements GeneratorInterface
             $body['with_prompt'] = $this->get_param('prompt_id');
         }
 
-        $client = new HaiClient();
+        // Kie can take several minutes for a long article. This remains below
+        // the API's own queue budget and is never retried, avoiding duplicates.
+        $client = new HaiClient(['timeout' => 300, 'retries' => 0]);
         $response = $client->client('generator/content', $body);
 
         $content = $this->find($response, 'content');

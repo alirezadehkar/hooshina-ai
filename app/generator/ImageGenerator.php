@@ -9,7 +9,9 @@ class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
 {
     public function generate()
     {
-        $client = new HaiClient();
+        // Creating the asynchronous task should be quick; the actual image is
+        // awaited through the status endpoint below.
+        $client = new HaiClient(['timeout' => 60, 'retries' => 0]);
 
         $params = [
             'subject' => $this->get_param('subject'),
@@ -24,11 +26,17 @@ class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
 
         if(!empty($imageUrl) && filter_var($imageUrl, FILTER_VALIDATE_URL)){
             $params['original_image'] = $imageUrl;
-            $route = Generator::ProductImage;
-            unset($params['subject']);
+            // The legacy product-image endpoint is Replicate-backed. Submit
+            // new plugin requests through Kie's GPT Image 2 image-to-image
+            // model while keeping that old endpoint available to old clients.
+            $params['model'] = Generator::ImageToImagePro;
+            $params['subject'] = sprintf(
+                'Create a professional product photo while preserving the product identity. Background style: %s',
+                $this->get_param('style', 'classical-realism')
+            );
+        } else {
+            $params['model'] = Generator::TextToImage;
         }
-
-        $params['model'] = $route;
 
         $response = $client->client('generator/image/queue/' . $route, $params);
 
@@ -76,29 +84,69 @@ class ImageGenerator extends GeneratorAbstract implements GeneratorInterface
             return ['content' => null, 'id' => null, 'status' => 'failed'];
         }
 
-        $client = new HaiClient(['method' => 'get']);
+        $cacheKey = 'hai_generation_status_' . md5((string) $content_id);
+        $cached = function_exists('get_transient') ? get_transient($cacheKey) : false;
+
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        $client = new HaiClient(['method' => 'get', 'timeout' => 30, 'retries' => 2]);
         $response = $client->client('generator/image/status', ['content_id' => $content_id]);
 
-        // HaiClient returns the Throwable itself on failure, and an object is
-        // never empty(), so a truthiness check would let an error through to
-        // find(), which walks the exception's stack trace and can lift an
-        // unrelated 'status' or 'media_url' out of the frame arguments and
-        // report a failed poll as a finished one.
-        if(!is_array($response)){
-            return ['content' => null, 'id' => null, 'status' => 'failed'];
+        if (!is_array($response)) {
+            return ['content' => null, 'id' => null, 'status' => 'processing'];
         }
 
         $url = $this->find($response, 'media_url');
         $status = $this->find($response, 'status');
 
-        if(empty($status)){
-            return ['content' => null, 'id' => null, 'status' => 'failed'];
+        if (empty($status)) {
+            return ['content' => null, 'id' => null, 'status' => 'processing'];
         }
 
         if(filter_var($url, FILTER_VALIDATE_URL) && $status == 'done'){
-            $uploadData = $this->uploadFile($url);
+            $lockKey = 'hai_generation_lock_' . md5((string) $content_id);
+            $lockAcquired = !function_exists('add_option') || add_option($lockKey, time(), '', false);
+
+            if (!$lockAcquired && function_exists('get_option')) {
+                $lockCreatedAt = (int) get_option($lockKey, 0);
+                if ($lockCreatedAt > 0 && time() - $lockCreatedAt > 120 && function_exists('delete_option')) {
+                    delete_option($lockKey);
+                    $lockAcquired = add_option($lockKey, time(), '', false);
+                }
+            }
+
+            if (!$lockAcquired) {
+                // Another request is importing this exact provider result.
+                // Returning processing makes the caller retry the read rather
+                // than creating a second attachment.
+                return ['content' => null, 'id' => null, 'status' => 'processing'];
+            }
+
+            try {
+                $uploadData = $this->uploadFile($url);
+            } finally {
+                if (function_exists('delete_option')) {
+                    delete_option($lockKey);
+                }
+            }
         }
 
-        return ['content' => $url, 'id' => $uploadData['id'] ?? null, 'status' => $status];
+        $result = [
+            'content' => $uploadData['url'] ?? $url,
+            'id' => $uploadData['id'] ?? null,
+            'status' => $status,
+        ];
+
+        // Pending reads are briefly cached. A completed result (including the
+        // WordPress attachment id) is kept for a day so another tab or a page
+        // restored after refresh cannot sideload the same media twice.
+        if (function_exists('set_transient')) {
+            $ttl = $status === 'done' ? DAY_IN_SECONDS : 5;
+            set_transient($cacheKey, $result, $ttl);
+        }
+
+        return $result;
     }
 }

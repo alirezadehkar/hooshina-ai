@@ -1,0 +1,158 @@
+.hai-queue {
+    position: fixed;
+    inset-inline-end: 20px;
+    bottom: 20px;
+    z-index: 100100;
+    width: min(380px, calc(100vw - 32px));
+    color: #17202a;
+    font-family: inherit;
+    direction: rtl;
+}
+
+.hai-queue__toggle {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 46px;
+    margin-inline-start: auto;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 14px;
+    color: #fff;
+    background: #202938;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .24);
+    cursor: pointer;
+}
+
+.hai-queue__warning {
+    display: none;
+    margin: 8px 8px 0;
+    padding: 10px 12px;
+    border: 1px solid #f5c26b;
+    border-radius: 12px;
+    color: #7a2e0e;
+    background: #fff8e7;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.8;
+}
+
+.hai-queue--busy .hai-queue__warning { display: block; }
+
+.hai-queue__pulse {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #42d7cb;
+}
+
+.hai-queue--busy .hai-queue__pulse {
+    animation: hai-queue-pulse 1.5s ease-in-out infinite;
+}
+
+.hai-queue__count {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    color: #202938;
+    background: #fff;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.hai-queue__panel {
+    display: none;
+    overflow: hidden;
+    margin-top: 8px;
+    border: 1px solid #dbe2ea;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, .2);
+}
+
+.hai-queue--open .hai-queue__panel { display: block; }
+
+.hai-queue__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #edf0f4;
+    font-weight: 700;
+}
+
+.hai-queue__close {
+    border: 0;
+    color: #667085;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.hai-queue__list {
+    max-height: min(460px, 58vh);
+    overflow: auto;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+}
+
+.hai-queue__empty { padding: 22px 16px; color: #667085; text-align: center; }
+
+.hai-queue__item {
+    margin: 0 0 7px;
+    padding: 12px;
+    border: 1px solid #e7ebf0;
+    border-radius: 12px;
+    background: #fbfcfd;
+}
+
+.hai-queue__item:last-child { margin-bottom: 0; }
+.hai-queue__row { display: flex; align-items: flex-start; gap: 10px; }
+.hai-queue__icon { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 10px; background: #eefaf9; line-height: 34px; text-align: center; }
+.hai-queue__body { min-width: 0; flex: 1; }
+.hai-queue__subject { overflow: hidden; margin-bottom: 4px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hai-queue__status { color: #667085; font-size: 12px; line-height: 1.7; }
+.hai-queue__hint { margin-top: 4px; color: #475467; font-size: 11px; line-height: 1.6; }
+.hai-queue__item--failed .hai-queue__status,
+.hai-queue__item--interrupted .hai-queue__status { color: #b42318; }
+.hai-queue__item--done .hai-queue__status,
+.hai-queue__item--applied .hai-queue__status { color: #067647; }
+
+.hai-queue__progress {
+    overflow: hidden;
+    height: 4px;
+    margin-top: 9px;
+    border-radius: 2px;
+    background: #e8edf2;
+}
+
+.hai-queue__progress::after {
+    display: block;
+    width: 40%;
+    height: 100%;
+    border-radius: inherit;
+    background: #13b8aa;
+    animation: hai-queue-progress 1.4s ease-in-out infinite;
+    content: "";
+}
+
+.hai-queue__actions { display: flex; gap: 7px; margin-top: 9px; }
+.hai-queue__action { padding: 5px 9px; border: 1px solid #ccd5df; border-radius: 7px; color: #344054; background: #fff; font: inherit; font-size: 12px; cursor: pointer; }
+.hai-queue__action--primary { border-color: #13a89c; color: #fff; background: #13a89c; }
+
+.hai-generation-backgrounded { display: none !important; }
+
+@keyframes hai-queue-pulse { 50% { opacity: .35; transform: scale(.8); } }
+@keyframes hai-queue-progress { from { transform: translateX(170%); } to { transform: translateX(-260%); } }
+
+@media (max-width: 782px) {
+    .hai-queue { inset-inline-end: 12px; bottom: 12px; width: calc(100vw - 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hai-queue--busy .hai-queue__pulse,
+    .hai-queue__progress::after { animation: none; }
+}

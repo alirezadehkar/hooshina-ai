@@ -111,6 +111,14 @@ class Assets {
                 ]
             ],
 
+            'queue' => [
+                'storage_key' => 'hooshina_ai_queue_v1_' . get_current_user_id(),
+                'session_key' => wp_generate_uuid4(),
+                'post_id' => get_the_ID() ?: 0,
+                'max_age' => DAY_IN_SECONDS,
+                'poll_intervals' => [5, 10, 15, 30, 60],
+            ],
+
             'texts' => [
                 'toolbar_button' => __('Hooshina Ai', 'hooshina-ai'),
                 'text_button' => __('Hooshina Ai', 'hooshina-ai'),
@@ -171,6 +179,21 @@ class Assets {
                 'from' => __('From', 'hooshina-ai'),
                 'characters' => __('Characters', 'hooshina-ai'),
                 'text_to_speech_is_over' => sprintf(__('Characters should not exceed %d.', 'hooshina-ai'), 1000), 
+                'queue_title' => __('Hooshina activity', 'hooshina-ai'),
+                'queue_empty' => __('There is no active generation.', 'hooshina-ai'),
+                'queue_submitting' => __('Sending request...', 'hooshina-ai'),
+                'queue_queued' => __('Waiting in queue', 'hooshina-ai'),
+                'queue_processing' => __('Generating...', 'hooshina-ai'),
+                'queue_done' => __('Generation completed', 'hooshina-ai'),
+                'queue_applied' => __('Completed and placed in the editor', 'hooshina-ai'),
+                'queue_failed' => __('Generation failed', 'hooshina-ai'),
+                'queue_interrupted' => __('The text request was interrupted. Please try again.', 'hooshina-ai'),
+                'queue_continue' => __('You can continue editing; the result will be placed automatically.', 'hooshina-ai'),
+                'queue_keep_open' => __('An activity is in progress. Do not close or refresh this page until it finishes.', 'hooshina-ai'),
+                'queue_apply' => __('Place in editor', 'hooshina-ai'),
+                'queue_retry_status' => __('Check again', 'hooshina-ai'),
+                'queue_dismiss' => __('Dismiss', 'hooshina-ai'),
+                'queue_show' => __('Show Hooshina activity', 'hooshina-ai'),
             ]
         );
 

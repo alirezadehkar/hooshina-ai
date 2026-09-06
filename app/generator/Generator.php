@@ -4,6 +4,7 @@ namespace HooshinaAi\App\Generator;
 class Generator
 {
     const TextToImage = 'text-to-image';
+    const ImageToImagePro = 'image-to-image-pro';
     const ProductImage = 'product-image';
     const TextToSpeech = 'text-to-speech';
 

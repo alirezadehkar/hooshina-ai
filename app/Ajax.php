@@ -81,6 +81,13 @@ class Ajax
 
         $generator = new Generator();
 
+        // WordPress/PHP commonly defaults to a 30 second execution limit,
+        // shorter than a legitimate Kie article response. Raise it only for
+        // synchronous text generation; image/audio requests return queued.
+        if (!in_array($type, ['image', Generator::TextToSpeech], true) && function_exists('set_time_limit')) {
+            @set_time_limit(330);
+        }
+
         if($type == 'image'){
             $generate = $generator->image()->set_params([
                 'subject' => $subject,
@@ -102,16 +109,19 @@ class Ajax
             ])->generate();
         }
 
+        if (!is_array($generate)) {
+            wp_send_json_error([
+                'msg' => __('The generation service is temporarily unavailable. Please try again.', 'hooshina-ai'),
+                'status' => 'error'
+            ]);
+        }
+
         $content = isset($generate['content']) ? $generate['content'] : null;
-        $status = isset($generate['status']) ? $generate['status'] : null;
+        $status = isset($generate['status']) ? $generate['status'] : 'done';
         $contentId = isset($generate['content_id']) ? $generate['content_id'] : null;
+        $isPending = $status !== 'done' && !empty($contentId);
 
-        // A queued job legitimately has no content yet, only a content id to
-        // poll. Speech is always queued now, so treating an empty body as a
-        // failure would reject every request before it had a chance to run.
-        $isQueued = $status && $status !== 'done' && !empty($contentId);
-
-        if (empty($content) && !$isQueued){
+        if (empty($content) && !$isPending){
             wp_send_json_error([
                 'msg' => __('Invalid response.', 'hooshina-ai'),
                 'status' => 'error'
@@ -126,9 +136,8 @@ class Ajax
             'content' => $content,
             'id' => (isset($generate['id']) ? $generate['id'] : null),
             'content_id' => $contentId,
-            // A duplicate 'status' => 'done' used to sit at the end of this
-            // array and silently overwrite the real value, so the client was
-            // told every job had finished.
+            // A duplicate hard-coded status used to sit at the end of this
+            // array and silently overwrite the real queue state.
             'status' => ($status ?: 'done'),
         ]);
     }
@@ -150,6 +159,7 @@ class Ajax
             'content' => $imageStatus['content'],
             'id' => (isset($imageStatus['id']) ? $imageStatus['id'] : null),
             'status' => (isset($imageStatus['status']) ? $imageStatus['status'] : null),
+            'content_id' => $contentId,
         ]);
     }
 

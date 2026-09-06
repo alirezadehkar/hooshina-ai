@@ -947,6 +947,66 @@ msgstr ""
 msgid "Intelligent image and text production with the help of Hooshina Ai."
 msgstr "تولید هوشمند تصویر و متن به کمک هوش مصنوعی هوشینا."
 
+#: app/Assets.php
+msgid "Hooshina activity"
+msgstr "فعالیت‌های هوشینا"
+
+#: app/Assets.php
+msgid "There is no active generation."
+msgstr "درخواستی در حال پردازش نیست."
+
+#: app/Assets.php
+msgid "Sending request..."
+msgstr "در حال ارسال درخواست..."
+
+#: app/Assets.php
+msgid "Waiting in queue"
+msgstr "در انتظار پردازش"
+
+#: app/Assets.php
+msgid "Generating..."
+msgstr "در حال تولید..."
+
+#: app/Assets.php
+msgid "Generation completed"
+msgstr "تولید انجام شد"
+
+#: app/Assets.php
+msgid "Completed and placed in the editor"
+msgstr "تولید شد و در ویرایشگر قرار گرفت"
+
+#: app/Assets.php
+msgid "Generation failed"
+msgstr "تولید با خطا مواجه شد"
+
+#: app/Assets.php
+msgid "The text request was interrupted. Please try again."
+msgstr "درخواست متن نیمه‌کاره ماند؛ لطفاً دوباره تلاش کنید."
+
+#: app/Assets.php
+msgid "You can continue editing; the result will be placed automatically."
+msgstr "می‌توانید به ویرایش ادامه دهید؛ نتیجه خودکار در محل درست قرار می‌گیرد."
+
+#: app/Assets.php
+msgid "An activity is in progress. Do not close or refresh this page until it finishes."
+msgstr "یک فعالیت در حال انجام است؛ تا پایان آن این صفحه را نبندید یا تازه‌سازی نکنید."
+
+#: app/Assets.php
+msgid "Place in editor"
+msgstr "قرار دادن در ویرایشگر"
+
+#: app/Assets.php
+msgid "Check again"
+msgstr "بررسی دوباره"
+
+#: app/Assets.php
+msgid "Dismiss"
+msgstr "پاک کردن"
+
+#: app/Assets.php
+msgid "Show Hooshina activity"
+msgstr "نمایش فعالیت‌های هوشینا"
+
 #. Author URI of the plugin/theme
 msgid "https://Hooshina.com"
 msgstr ""

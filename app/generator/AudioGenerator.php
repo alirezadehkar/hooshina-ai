@@ -14,7 +14,7 @@ class AudioGenerator extends GeneratorAbstract implements GeneratorInterface
             'locale' => Helper::get_locale(),
         ];
 
-        $client = new HaiClient();
+        $client = new HaiClient(['timeout' => 60, 'retries' => 0]);
         $response = $client->client('generator/audio/queue/text-to-speech', $body);
 
         $url = $response ? $this->find($response, 'output') : null;
@@ -48,33 +48,64 @@ class AudioGenerator extends GeneratorAbstract implements GeneratorInterface
             return ['content' => null, 'id' => null, 'status' => 'failed'];
         }
 
-        $client = new HaiClient(['method' => 'get']);
+        $cacheKey = 'hai_audio_generation_status_' . md5((string) $content_id);
+        $cached = function_exists('get_transient') ? get_transient($cacheKey) : false;
+
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        $client = new HaiClient(['method' => 'get', 'timeout' => 30, 'retries' => 2]);
         $response = $client->client('generator/audio/status', ['content_id' => $content_id]);
 
-        // HaiClient returns the Throwable itself on failure, and an object is
-        // never empty(), so a plain empty() check would let an error through to
-        // find(), which walks the exception's stack trace and can turn an
-        // unrelated 'status' argument into a fake result.
         if(!is_array($response)){
-            return ['content' => null, 'id' => null, 'status' => 'failed'];
+            return ['content' => null, 'id' => null, 'status' => 'processing'];
         }
 
         $url = $this->find($response, 'media_url');
         $status = $this->find($response, 'status');
 
         if(empty($status)){
-            return ['content' => null, 'id' => null, 'status' => 'failed'];
+            return ['content' => null, 'id' => null, 'status' => 'processing'];
         }
 
         if($status == 'done' && filter_var($url, FILTER_VALIDATE_URL)){
-            $uploadData = $this->uploadFile($url);
+            $lockKey = 'hai_audio_generation_lock_' . md5((string) $content_id);
+            $lockAcquired = !function_exists('add_option') || add_option($lockKey, time(), '', false);
+
+            if (!$lockAcquired && function_exists('get_option')) {
+                $lockCreatedAt = (int) get_option($lockKey, 0);
+                if ($lockCreatedAt > 0 && time() - $lockCreatedAt > 120 && function_exists('delete_option')) {
+                    delete_option($lockKey);
+                    $lockAcquired = add_option($lockKey, time(), '', false);
+                }
+            }
+
+            if (!$lockAcquired) {
+                return ['content' => null, 'id' => null, 'status' => 'processing'];
+            }
+
+            try {
+                $uploadData = $this->uploadFile($url);
+            } finally {
+                if (function_exists('delete_option')) {
+                    delete_option($lockKey);
+                }
+            }
         }
 
-        return [
+        $result = [
             'content' => ($uploadData['url'] ?? $url),
             'id' => ($uploadData['id'] ?? null),
             'status' => $status,
         ];
+
+        if (function_exists('set_transient')) {
+            $ttl = $status === 'done' ? DAY_IN_SECONDS : 5;
+            set_transient($cacheKey, $result, $ttl);
+        }
+
+        return $result;
     }
 
     public function get_speech_voices()
